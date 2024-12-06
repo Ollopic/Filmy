@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    ports:
+      - 80:5000
+    volumes:
+      - .:/code
+  backend:
+    build: .
+    ports:
+      - 5000:5001
+    volumes:
+      - .:/code
