@@ -25,3 +25,13 @@ log-web: ## log web container
 
 log-back: ## log back container
 	@docker compose logs -f --tail 100 backend
+
+lint: ## check errors in python code without fixing them
+	@docker compose exec backend ruff check ${DIR_TO_REFAC}
+
+unsafe-fixes: ## fix python code for unsafe issues
+	@docker compose exec backend ruff check --fix --unsafe-fixes ${DIR_TO_REFAC}
+
+format: ## format python code and sort import
+	@docker compose exec backend ruff format ${DIR_TO_REFAC}
+	@docker compose exec backend ruff check --select I --fix ${DIR_TO_REFAC}
