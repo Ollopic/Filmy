@@ -5,10 +5,11 @@ services:
       - 80:5000
     volumes:
       - .:/app
-    command: flask --app back run --debug --host=0.0.0.0
+    command: flask --app front run --debug --host=0.0.0.0
   backend:
     build: .
     ports:
       - 5000:5000
+    command: flask --app back run --debug --host=0.0.0.0
     volumes:
       - .:/app
