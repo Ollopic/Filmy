@@ -14,3 +14,5 @@ build/
 *.egg-info/
 
 back/settings_back.py
+
+front/node_modules/
