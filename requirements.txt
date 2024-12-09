@@ -1,3 +1,4 @@
 flask
 psycopg[binary]
 ruff
+requests
