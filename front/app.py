@@ -1,8 +1,8 @@
-from flask import Flask, render_template
+from flask import Flask
+
+from .blueprints import auth_bp, main_bp
 
 app = Flask(__name__)
 
-
-@app.route("/")
-def home():
-    return render_template("index.html", title="Page d'accueil")
+app.register_blueprint(main_bp)
+app.register_blueprint(auth_bp)
