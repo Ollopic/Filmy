@@ -1,15 +1,9 @@
 services:
-  web:
+  app:
     build: .
     ports:
       - 8080:5000
     volumes:
-      - ./front:/app
-    command: flask --app app run --debug --host=0.0.0.0
-  backend:
-    build: .
-    ports:
-      - 5000:5000
-    command: flask --app app run --debug --host=0.0.0.0
-    volumes:
-      - ./back:/app
+      - ./app:/app
+      - ./entrypoint.sh:/entrypoint.sh
+    entrypoint: ["/entrypoint.sh"]

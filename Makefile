@@ -17,21 +17,15 @@ stop: ## stop containers
 restart: ## restart containers
 	@docker compose restart
 
-log: ## log web and back containers
+log: ## log container
 	@docker compose logs -f --tail 100
 
-log-web: ## log web container
-	@docker compose logs -f --tail 100 web
+lint: ## check errors in python code without fixing them
+	@docker compose exec app ruff check ${DIR_TO_REFAC}
 
-log-back: ## log back container
-	@docker compose logs -f --tail 100 backend
+unsafe-fixes: ## fix python code for unsafe issues
+	@docker compose exec app ruff check --fix --unsafe-fixes ${DIR_TO_REFAC}
 
-lint: ## check errors in python code without fixing them for a specific app (backend or web)
-	@docker compose exec ${APP} ruff check ${DIR_TO_REFAC}
-
-unsafe-fixes: ## fix python code for unsafe issues for a specific app (backend or web)
-	@docker compose exec ${APP} ruff check --fix --unsafe-fixes ${DIR_TO_REFAC}
-
-format: ## format python code and sort import for a specific app (backend or web)
-	@docker compose exec ${APP} ruff format ${DIR_TO_REFAC}
-	@docker compose exec ${APP} ruff check --select I --fix ${DIR_TO_REFAC}
+format: ## format python code and sort import
+	@docker compose exec app ruff format ${DIR_TO_REFAC}
+	@docker compose exec app ruff check --select I --fix ${DIR_TO_REFAC}
