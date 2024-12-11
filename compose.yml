@@ -7,3 +7,9 @@ services:
       - ./app:/app
       - ./entrypoint.sh:/entrypoint.sh
     entrypoint: ["/entrypoint.sh"]
+    networks:
+      - filmy_network
+
+networks:
+  filmy_network:
+    name: filmy_network
