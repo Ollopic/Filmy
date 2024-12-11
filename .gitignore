@@ -15,4 +15,4 @@ build/
 
 back/settings_back.py
 
-front/node_modules/
+app/node_modules/
