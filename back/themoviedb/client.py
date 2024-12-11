@@ -40,6 +40,11 @@ class Client:
 
         return response.json()
 
+    def get_trending_movies(self) -> dict:
+        return self._request(
+            endpoint="trending/movie/week",
+        )
+
     def get_movie_by_title(self, title: str) -> dict:
         return self._request(
             endpoint="search/movie",
