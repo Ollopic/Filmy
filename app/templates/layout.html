@@ -20,10 +20,17 @@
             <span class="self-center text-2xl font-semibold whitespace-nowrap">Filmy</span>
         </a>
         <div class="flex md:order-2">
+            {% if is_connected %}
+            <a href="/auth/logout"
+                class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0">
+                Se déconnecter
+            </a>
+            {% else %}
             <a href="/auth/login"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0">
                 Se connecter
             </a>
+            {% endif %}
             <button data-collapse-toggle="navbar-cta" type="button"
                 class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
                 aria-controls="navbar-cta" aria-expanded="false">
@@ -46,17 +53,76 @@
                         aria-current="page">Accueil</a>
                 </li>
                 <li>
-                    <a href="/movie"
-                        class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Films</a>
+                    <p id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" data-dropdown-trigger="hover" class="inline-flex items-center block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0" type="button">
+                        Films
+                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"></path>
+                        </svg>
+                    </p>
+
+                    <div id="dropdownHover" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                          <li>
+                            <a href="/movie" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Populaires</a>
+                          </li>
+                          <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Du moment</a>
+                          </li>
+                          <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">A venir</a>
+                          </li>
+                          <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Les mieux évalués</a>
+                          </li>
+                        </ul>
+                    </div>
                 </li>
                 <li>
                     <a href="/artist"
-                        class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Acteurs</a>
+                        class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Artistes</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <div class="container mt-20 absolute z-50">
+            {% for category, message in messages %}
+                {% set alert_classes = {
+                    "info": "text-blue-800 bg-blue-50",
+                    "success": "text-green-800 bg-green-50",
+                    "warning": "text-yellow-800 bg-yellow-50",
+                    "error": "text-red-800 bg-red-50"
+                } %}
+                <div id="alert-{{ loop.index }}"
+                     class="inline-flex items-center p-4 mb-4 rounded-lg {{ alert_classes[category] }}"
+                     role="alert"
+                     data-timeout="10000">
+                  <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                       fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"></path>
+                  </svg>
+                  <span class="sr-only">{{ category }}</span>
+                  <div class="ms-3 text-sm font-medium">
+                    {{ message }}
+                  </div>
+                  <button type="button"
+                          class="ms-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 p-1.5 hover:bg-opacity-75 inline-flex items-center justify-center h-8 w-8"
+                          data-dismiss-target="#alert-{{ loop.index }}" aria-label="Close">
+                      <span class="sr-only">Close</span>
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                           fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                              stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"></path>
+                      </svg>
+                  </button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
 
 <script>
     let lastScrollTop = 0;
@@ -74,6 +140,16 @@
         }
 
         lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // Avoid negative scroll values
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('[data-timeout]');
+        alerts.forEach(alert => {
+            const timeout = parseInt(alert.getAttribute('data-timeout'), 10);
+            setTimeout(() => {
+                alert.remove();
+            }, timeout);
+        });
     });
 </script>
 
