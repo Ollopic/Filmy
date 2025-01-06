@@ -88,7 +88,7 @@
 
 {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}
-        <div class="container mt-20 absolute z-50">
+        <div class="container mt-20 absolute z-50 m-2">
             {% for category, message in messages %}
                 {% set alert_classes = {
                     "info": "text-blue-800 bg-blue-50",

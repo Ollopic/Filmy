@@ -25,11 +25,10 @@ def login():
 
         try:
             token = client.get_token(email, password)
-            resp = make_response()
+            resp = make_response(redirect(url_for("main.home")))
             resp.set_cookie("token", token)
-            resp.headers["location"] = url_for("main.home")
             flash("Connexion réussie !", "success")
-            return resp, 302
+            return resp
         except Exception:
             flash("E-mail ou mot de passe incorrect", "error")
             return redirect(url_for("auth.login"))
@@ -57,8 +56,7 @@ def register():
 
 @auth_bp.route("/logout")
 def logout():
-    resp = make_response()
+    resp = make_response(redirect(url_for("main.home")))
     resp.delete_cookie("token")
-    resp.headers["location"] = url_for("main.home")
     flash("Déconnexion réussie !", "success")
-    return resp, 302
+    return resp
