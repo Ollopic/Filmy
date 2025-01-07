@@ -19,9 +19,12 @@ def validate_token(response):
     if "token" in request.cookies:
         token = request.cookies["token"]
         try:
-            client.get_me(token)
+            response = client.get_me(token)
         except requests.exceptions.HTTPError as e:
-            if e.response.status_code == 422:
+            if e.response.status_code == 422 or (
+                e.response.status_code == 401
+                and e.response.json().get("msg") == "Token has expired"
+            ):
                 response = redirect(url_for("auth.login"))
                 response.delete_cookie("token")
                 flash("Token expiré, veuillez vous reconnecter", "error")
