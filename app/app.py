@@ -19,7 +19,7 @@ def validate_token(response):
     if "token" in request.cookies:
         token = request.cookies["token"]
         try:
-            response = client.get_me(token)
+            client.get_me(token)
         except requests.exceptions.HTTPError as e:
             if e.response.status_code == 422 or (
                 e.response.status_code == 401

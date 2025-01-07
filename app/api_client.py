@@ -39,3 +39,13 @@ class Client:
         response.raise_for_status()
 
         return response.json()
+
+    def update_user(self, token: str, profile_data: dict):
+        response = requests.patch(
+            f"{self.BASE_URL}/user",
+            headers={"Authorization": f"Bearer {token}"},
+            json=profile_data,
+        )
+        response.raise_for_status()
+
+        return response.json()

@@ -1,0 +1,143 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="bg-gray-100 flex flex-col items-center py-16 mt-10">
+    <section id="profile-section" class="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm mb-8">
+        <div class="flex flex-col items-center">
+            <img
+                src="{{ 'data:image/png;base64,' + user_data['profile_image'] if user_data['profile_image'] else '/static/images/default-profile.png' }}"
+                alt="Photo de profil actuelle"
+                class="w-[165px] h-[165px] rounded-full border-2 border-blue-500 mb-4">
+            <h1 class="text-xl font-semibold text-gray-800">{{ user_data["username"] }}</h1>
+            <p class="text-gray-600">{{ user_data["mail"] }}</p>
+            <div class="mt-6 flex space-x-4">
+                <button
+                    id="edit-profile-button"
+                    class="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-300">
+                    Modifier le profil
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="profile-section-edit" class="hidden bg-white shadow-lg rounded-lg p-6 w-full max-w-sm mb-8">
+        <form class="mt-4 space-y-4" action="{{ url_for('main.profile') }}" method="post" enctype="multipart/form-data">
+            <div class="flex items-center justify-center">
+                <div class="relative flex items-center justify-center w-[165px] h-[165px] transition-all duration-300">
+                    <input id="file" name="file" type="file" class="hidden" onchange="loadFile(event)" />
+                    <img
+                        src="{{ 'data:image/png;base64,' + user_data['profile_image'] if user_data['profile_image'] else '/static/images/default-profile.png' }}"
+                        id="output"
+                        alt="Nouvelle photo de profil"
+                        class="absolute w-[165px] h-[165px] object-cover border-2 border-blue-500 rounded-full shadow-[0_0_10px_0_rgba(255,255,255,0.35)]">
+                    <label
+                        for="file"
+                        class="absolute flex items-center justify-center w-[165px] h-[165px] cursor-pointer transition-all duration-200 bg-transparent text-transparent rounded-full hover:bg-black hover:bg-opacity-80 hover:text-white z-10">
+                        <span class="inline-flex items-center justify-center h-8 px-2">Changer l'image</span>
+                    </label>
+                </div>
+            </div>
+            <label for="username-input" class="block text-sm font-medium text-gray-700">Nom d'utilisateur</label>
+            <input
+                id="username-input"
+                name="username"
+                type="text"
+                value="{{ user_data["username"] }}"
+                class="text-gray-800 border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                required>
+
+            <label for="email-input" class="block text-sm font-medium text-gray-700">Adresse e-mail</label>
+            <input
+                id="email-input"
+                name="email"
+                type="email"
+                value="{{ user_data["mail"] }}"
+                class="text-gray-800 border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                required>
+
+            <div class="mt-6 flex space-x-4 justify-center">
+                <button
+                    id="save-profile-button"
+                    type="submit"
+                    class="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-lg hover:bg-green-600 focus:ring-2 focus:ring-green-300">
+                    Enregistrer
+                </button>
+                <button
+                    id="cancel-edit-button"
+                    type="button"
+                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 focus:ring-2 focus:ring-gray-400">
+                    Annuler
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <section class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Mes Collections</h2>
+
+        <div class="mb-6">
+            <h3 class="text-lg font-medium text-gray-700 mb-2">Favoris</h3>
+            <ul class="space-y-2">
+                <li class="bg-gray-100 p-3 rounded-lg flex justify-between items-center">
+                    <span class="text-gray-800">Inception</span>
+                    <button class="text-red-500 hover:underline">Supprimer</button>
+                </li>
+                <li class="bg-gray-100 p-3 rounded-lg flex justify-between items-center">
+                    <span class="text-gray-800">The Matrix</span>
+                    <button class="text-red-500 hover:underline">Supprimer</button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="mb-6">
+            <h3 class="text-lg font-medium text-gray-700 mb-2">Liste de souhaits</h3>
+            <ul class="space-y-2">
+                <li class="bg-gray-100 p-3 rounded-lg flex justify-between items-center">
+                    <span class="text-gray-800">Avatar: La voie de l'eau</span>
+                    <button class="text-red-500 hover:underline">Supprimer</button>
+                </li>
+                <li class="bg-gray-100 p-3 rounded-lg flex justify-between items-center">
+                    <span class="text-gray-800">Dune</span>
+                    <button class="text-red-500 hover:underline">Supprimer</button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="mb-6">
+            <h3 class="text-lg font-medium text-gray-700 mb-2">Prêtés</h3>
+            <ul class="space-y-2">
+                <li class="bg-gray-100 p-3 rounded-lg flex justify-between items-center">
+                    <div>
+                        <span class="text-gray-800">Le Seigneur des Anneaux</span>
+                        <p class="text-sm text-gray-500">Prêté à : Patrick Little Jr.</p>
+                    </div>
+                    <button class="text-red-500 hover:underline">Marquer comme rendu</button>
+                </li>
+            </ul>
+        </div>
+    </section>
+</div>
+
+<script>
+const loadFile = function (event) {
+    const image = document.getElementById("output");
+    image.src = URL.createObjectURL(event.target.files[0]);
+    event.preventDefault();
+};
+
+const profileSection = document.getElementById("profile-section");
+const profileSectionEdit = document.getElementById("profile-section-edit");
+
+document.getElementById("edit-profile-button").addEventListener("click", () => {
+    profileSection.classList.add("hidden");
+    profileSectionEdit.classList.replace("hidden", "block");
+});
+
+document.getElementById("cancel-edit-button").addEventListener("click", () => {
+    profileSectionEdit.classList.replace("block", "hidden");
+    profileSection.classList.replace("hidden", "block");
+});
+</script>
+{% endblock %}
