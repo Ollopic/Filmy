@@ -23,17 +23,17 @@ def trending():
     )
 
 
+@movie_bp.route("/upcoming")
+def upcoming():
+    return render_template(
+        "movie/index.html", title="Films à venir", movies=client.get_upcoming_movies()
+    )
+
+
 @movie_bp.route("/top_rated")
 def top_rated():
     return render_template(
         "movie/index.html",
         title="Films les mieux notés",
         movies=client.get_top_rating_movies(),
-    )
-
-
-@movie_bp.route("/upcoming")
-def upcoming():
-    return render_template(
-        "movie/index.html", title="Films à venir", movies=client.get_upcoming_movies()
     )
