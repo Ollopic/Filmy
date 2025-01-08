@@ -1,3 +1,4 @@
+from datetime import datetime
 from logging import getLogger
 
 import requests
@@ -31,6 +32,15 @@ def validate_token(response):
                 return response
 
     return response
+
+
+@app.template_filter("strftime")
+def _jinja2_filter_datetime(date, fmt="%d %b. %Y"):
+    if isinstance(date, str):
+        date = datetime.strptime(date, "%Y-%m-%d")
+    native = date.replace(tzinfo=None)
+    date_format = fmt
+    return native.strftime(date_format)
 
 
 @app.context_processor

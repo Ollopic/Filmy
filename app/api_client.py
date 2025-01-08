@@ -49,3 +49,27 @@ class Client:
         response.raise_for_status()
 
         return response.json()
+
+    def get_popular_movies(self, page: int = 1):
+        response = requests.get(f"{self.BASE_URL}/movies/popular?page={page}")
+        response.raise_for_status()
+
+        return response.json()
+
+    def get_trending_movies(self, page: int = 2):
+        response = requests.get(f"{self.BASE_URL}/movies/trending?page={page}")
+        response.raise_for_status()
+
+        return response.json()
+
+    def get_top_rating_movies(self, page: int = 1):
+        response = requests.get(f"{self.BASE_URL}/movies/top_rated?page={page}")
+        response.raise_for_status()
+
+        return response.json()
+
+    def get_upcoming_movies(self, page: int = 1):
+        response = requests.get(f"{self.BASE_URL}/movies/upcoming?page={page}")
+        response.raise_for_status()
+
+        return response.json()
