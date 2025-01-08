@@ -22,7 +22,6 @@ def search():
 
 @main_bp.route("/profile", methods=["GET", "POST"])
 def profile():
-    user_data = client.get_me(request.cookies["token"])
     if request.method == "POST":
         profile_data = {}
         profile_data.update({"username": request.form.get("username")})
@@ -34,6 +33,6 @@ def profile():
             )
 
         if profile_data:
-            user_data = client.update_user(request.cookies["token"], profile_data)
+            client.update_user(request.cookies["token"], profile_data)
 
-    return render_template("main/profile.html", title="Profil", user_data=user_data)
+    return render_template("main/profile.html", title="Profil")

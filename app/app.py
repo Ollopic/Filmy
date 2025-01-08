@@ -36,7 +36,12 @@ def validate_token(response):
 @app.context_processor
 def is_user_connected():
     token = request.cookies.get("token")
-    return dict(is_connected=token is not None)
+    try:
+        user_data = client.get_me(request.cookies["token"]) if token else {}
+    except requests.exceptions.HTTPError:
+        return dict(is_connected=False, user_data={})
+
+    return dict(is_connected=token is not None, user_data=user_data)
 
 
 app.register_blueprint(main_bp)
