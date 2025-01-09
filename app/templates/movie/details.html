@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div class="mx-auto sm:mx-0 rounded-lg mt-16 pt-2 w-full md:mt-14 sm:mt-12">
+        <div class="text-white flex flex-col md:flex-row items-center justify-center bg-center bg-no-repeat bg-cover bg-blue-800 bg-blend-multiply" style="background-image: url('{{ "https://image.tmdb.org/t/p/original" + movie.backdrop_path }}');">>
+            <!-- Movie Poster -->
+            <a href="{{ "https://image.tmdb.org/t/p/w500" + movie.poster_path }}" target="_blank">
+                <img src="{{ "https://image.tmdb.org/t/p/w500" + movie.poster_path }}" alt="Nosferatu Poster" class="w-80 h-100 object-cover m-5">
+            </a>
+            <!-- Movie Details -->
+            <div class="p-6 md:w-2/3">
+                <div class="flex items-center gap-3">
+                    <h1 class="text-2xl font-bold">{{ movie.title }} ({{ movie.release_date|strftime('%Y') }})</h1>
+                    <div class="text-sm border p-1">12</div>
+                </div>
+
+                <p class="mt-2 italic">{{ movie.tagline }}</p>
+
+                <!-- Info Section -->
+                <div class="mt-4 text-sm">
+                    <p><strong>Release Date:</strong> {{ movie.release_date|strftime('%d-%m-%Y') }} (FR)</p>
+                    <p><strong>Genres:</strong>
+                        {% for genre in movie.genres %}
+                            {{ genre.name }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    <p><strong>Durée:</strong> {{ movie.runtime|minutes_to_hours }}</p>
+                </div>
+
+                <!-- Score -->
+                <div class="mt-4 flex items-center gap-3">
+                    <div class="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-300 text-yellow-600 text-lg font-bold">{{ movie.vote_average|round(2) }}</div>
+                    <span class="text-sm">Score d'évaluation</span>
+                </div>
+
+                <!-- Actions -->
+                <div class="mt-4 flex gap-2">
+                    <button class="px-4 py-2 bg-blue-500 text-sm rounded hover:bg-blue-600">Bande-annonce</button>
+                    {% if user_data %}
+                        <button class="px-4 py-2 bg-gray-400 text-sm rounded hover:bg-gray-500">Ajouter à ma collection</button>
+                    {% endif %}
+                </div>
+
+                <!-- Synopsis -->
+                <h2 class="mt-6 text-lg font-semibold">Synopsis</h2>
+                <p class="mt-2 text-sm leading-relaxed">
+                    {{ movie.overview }}
+                </p>
+
+                <!-- Credits -->
+                <div class="mt-6 text-sm">
+                    <p><strong>Director:</strong> {{ movie.director }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-10 flex-wrap">
+            <div class="p-2 xl:ml-32 md:w-2/3 sm:w-full flex flex-1 flex-col mt-3">
+                <p class="text-2xl font-bold">Têtes d'affiches</p>
+                <div id="carousel" class="flex space-x-4 overflow-x-auto scroll-smooth">
+                    {% for credit in credits %}
+                    <div class="flex-shrink-0 bg-white rounded-lg shadow p-4">
+                        <img src="{{ "https://image.tmdb.org/t/p/w200" + credit.profile_path if credit.profile_path else url_for('static', filename='images/default_credit_picture.jpg') }}" loading="lazy" alt="Film 1" class="rounded-lg mb-2 h-64 w-48">
+                        <h3 class="text-sm font-bold">{{ credit.name }}</h3>
+                        <p class="text-gray-500 text-sm">{{ credit.character }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="flex lg:flex-col gap-5 md:mr-20 sm:mr-0 items-center justify-center sm:max-lg:w-full md:mb-10 md:mb-0">
+                <div class="flex flex-col items-center gap-3">
+                    <p class="font-bold text-lg">Titre d'origine</p>
+                    <p>{{ movie.original_title }}</p>
+                </div>
+                <div class="flex flex-col items-center gap-3">
+                    <p class="font-bold text-lg">Statut</p>
+                    <p>{{ movie.status }}</p>
+                </div>
+                <div class="flex flex-col items-center gap-3">
+                    <p class="font-bold text-lg">Revenue</p>
+                    <p>${{ movie.revenue }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
