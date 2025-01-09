@@ -37,3 +37,13 @@ def top_rated():
         title="Films les mieux notés",
         movies=client.get_top_rating_movies(),
     )
+
+
+@movie_bp.route("/<int:movie_id>")
+def details(movie_id: int):
+    return render_template(
+        "movie/details.html",
+        title="Détail d'un film",
+        movie=client.get_movie_by_id(movie_id),
+        credits=client.get_movie_credits(movie_id),
+    )

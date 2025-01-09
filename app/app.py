@@ -34,6 +34,13 @@ def validate_token(response):
     return response
 
 
+@app.template_filter()
+def minutes_to_hours(minutes):
+    hours = minutes // 60
+    remaining_minutes = minutes % 60
+    return f"{hours}h {remaining_minutes}min"
+
+
 @app.template_filter("strftime")
 def _jinja2_filter_datetime(date, fmt="%d %b. %Y"):
     if isinstance(date, str):

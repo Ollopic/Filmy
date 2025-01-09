@@ -73,3 +73,13 @@ class Client:
         response.raise_for_status()
 
         return response.json()
+
+    def get_movie_by_id(self, movie_id: int):
+        response = requests.get(f"{self.BASE_URL}/movies/{movie_id}")
+        response.raise_for_status()
+        return response.json()
+
+    def get_movie_credits(self, movie_id: int):
+        response = requests.get(f"{self.BASE_URL}/movies/{movie_id}/credits")
+        response.raise_for_status()
+        return response.json()
