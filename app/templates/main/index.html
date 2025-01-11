@@ -7,56 +7,30 @@
     <div class="px-4 mx-auto max-w-screen-xl text-center lg:py-20">
         <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl">Bienvenue sur Filmy</h1>
         <p class="mb-8 text-lg font-normal text-gray-300 lg:text-xl sm:px-16 lg:px-48">LA vidéothèque qui va changer votre vie !</p>
-        <form class="mx-auto">
-            <div class="flex">
-                <div class="relative w-full">
-                    <input type="search" id="search-dropdown" class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Chercher un film, un artiste..." required />
-                    <button type="submit" class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white rounded-e-lg border border-blue-500 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
-                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"></path>
-                        </svg>
-                        <span class="sr-only">Chercher</span>
-                    </button>
-                </div>
-            </div>
+        <form class="mx-auto relative w-full" action="{{ url_for('main.search') }}" method="get">
+            <input type="search" id="search-dropdown" name="title" class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Chercher un film, un artiste..." required />
+            <button type="submit" class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white rounded-e-lg border border-blue-500 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"></path>
+                </svg>
+                <span class="sr-only">Chercher</span>
+            </button>
         </form>
     </div>
 </section>
 
 <div class="p-5 w-2/3 mx-auto flex flex-1 flex-col">
-    <p class="text-2xl font-bold">Tendances</p>
-    <div class="relative">
-        <div id="carousel" class="flex space-x-4 overflow-x-auto scroll-smooth">
-            <div class="w-48 flex-shrink-0 bg-white rounded-lg shadow p-4">
-                <img src="https://via.placeholder.com/150x200" alt="Film 1" class="rounded-lg mb-2">
-                <h3 class="text-sm font-bold">Venom: The Last Dance</h3>
-                <p class="text-gray-500 text-sm">30 oct. 2024</p>
-            </div>
-
-            <div class="w-48 flex-shrink-0 bg-white rounded-lg shadow p-4">
-                <img src="https://via.placeholder.com/150x200" alt="Film 2" class="rounded-lg mb-2">
-                <h3 class="text-sm font-bold">Juré n°2</h3>
-                <p class="text-gray-500 text-sm">30 oct. 2024</p>
-            </div>
-
-            <div class="w-48 flex-shrink-0 bg-white rounded-lg shadow p-4">
-                <img src="https://via.placeholder.com/150x200" alt="Film 3" class="rounded-lg mb-2">
-                <h3 class="text-sm font-bold">Vaiana 2</h3>
-                <p class="text-gray-500 text-sm">27 nov. 2024</p>
-            </div>            <div class="w-48 flex-shrink-0 bg-white rounded-lg shadow p-4">
-                <img src="https://via.placeholder.com/150x200" alt="Film 3" class="rounded-lg mb-2">
-                <h3 class="text-sm font-bold">Vaiana 2</h3>
-                <p class="text-gray-500 text-sm">27 nov. 2024</p>
-            </div>            <div class="w-48 flex-shrink-0 bg-white rounded-lg shadow p-4">
-                <img src="https://via.placeholder.com/150x200" alt="Film 3" class="rounded-lg mb-2">
-                <h3 class="text-sm font-bold">Vaiana 2</h3>
-                <p class="text-gray-500 text-sm">27 nov. 2024</p>
-            </div>            <div class="w-48 flex-shrink-0 bg-white rounded-lg shadow p-4">
-                <img src="https://via.placeholder.com/150x200" alt="Film 3" class="rounded-lg mb-2">
-                <h3 class="text-sm font-bold">Vaiana 2</h3>
-                <p class="text-gray-500 text-sm">27 nov. 2024</p>
-            </div>
+    <p class="text-2xl font-bold">Actuellement au cinéma</p>
+    <div id="carousel" class="flex space-x-4 overflow-x-auto scroll-smooth">
+        {% for movie in movies_now_playing %}
+        <div class="w-48 flex-shrink-0 bg-white rounded-lg shadow p-4">
+            <a href="{{ url_for('movie.details', movie_id=movie.id_tmdb) }}">
+                <img class="rounded-t-lg" src="https://image.tmdb.org/t/p/w200/{{ movie.poster_path }}" alt="{{ movie.original_title }}" loading="lazy" />
+            </a>
+            <h3 class="text-sm font-bold">{{ movie.title }}</h3>
+            <p class="text-gray-500 text-sm">{{ movie.release_date|strftime }}</p>
         </div>
+        {% endfor %}
     </div>
 </div>
 

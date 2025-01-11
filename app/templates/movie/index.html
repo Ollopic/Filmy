@@ -79,7 +79,7 @@
             {% for movie in movies %}
                 <div class="group relative max-w-sm bg-white border border-gray-200 rounded-lg shadow">
                     <a href="{{ url_for('movie.details', movie_id=movie.id_tmdb) }}">
-                        <img class="rounded-t-lg" src="https://image.tmdb.org/t/p/w200/{{ movie.poster_path }}" alt="{{ movie.original_title }}" loading="lazy" />
+                        <img class="rounded-t-lg" src="{{ "https://image.tmdb.org/t/p/w500" + movie.poster_path if movie.poster_path else url_for('static', filename='images/default-movie.png') }}" alt="{{ movie.original_title }}" loading="lazy" />
                     </a>
                     <div class="p-5 relative">
                         <div class="z-50 absolute inline-flex items-center justify-center w-10 h-10 text-xs font-bold text-white bg-blue-500 border-2 border-white rounded-full -left-2 -top-4">{{ movie.vote_average|round(2) }}</div>
