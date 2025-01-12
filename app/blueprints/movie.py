@@ -43,7 +43,7 @@ def top_rated():
 def details(movie_id: int):
     return render_template(
         "movie/details.html",
-        title="Détail d'un film",
+        title="Détails du film",
         movie=client.get_movie_by_id(movie_id),
         credits=client.get_movie_credits(movie_id),
     )

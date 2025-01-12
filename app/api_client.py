@@ -94,3 +94,13 @@ class Client:
         response = requests.get(f"{self.BASE_URL}/movies?title={title}")
         response.raise_for_status()
         return response.json()
+
+    def get_popular_persons(self):
+        response = requests.get(f"{self.BASE_URL}/person/popular")
+        response.raise_for_status()
+        return response.json()
+
+    def get_person(self, person_id: int):
+        response = requests.get(f"{self.BASE_URL}/person/{person_id}")
+        response.raise_for_status()
+        return response.json()
