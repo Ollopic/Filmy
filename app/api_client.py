@@ -4,7 +4,7 @@ import requests
 
 
 class Client:
-    BASE_URL: str = "http://172.17.0.1:8001"
+    BASE_URL: str = "http://172.17.0.1:8002"
 
     _logger: Logger = None
 

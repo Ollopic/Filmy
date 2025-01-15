@@ -40,6 +40,13 @@ def minutes_to_hours(minutes):
     remaining_minutes = minutes % 60
     return f"{hours}h {remaining_minutes}min"
 
+@app.template_filter('age')
+def calculate_age(birthdate):
+    if birthdate:
+        today = datetime.now()
+        age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+        return age
+    return ''
 
 @app.template_filter("strftime")
 def _jinja2_filter_datetime(date, fmt="%d %b. %Y"):

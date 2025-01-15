@@ -24,5 +24,25 @@ def search():
 
 @person_bp.route("/<int:person_id>")
 def details(person_id: int):
-    person = client.get_person(person_id)
+    person = client.get_person(person_id)["data"]
+
+    def get_sort_date(credit):
+        if credit['media_type'] == 'tv' and credit.get('first_air_date'):
+            return credit['first_air_date']
+        elif credit.get('release_date'):
+            return credit['release_date']
+        else:
+            return '1900-01-01'
+
+    person['combined_credits']['cast'] = sorted(
+        person['combined_credits']['cast'],
+        key=get_sort_date,
+        reverse=True
+    )
+
+    person['combined_credits']['crew'] = sorted(
+        person['combined_credits']['crew'],
+        key=get_sort_date,
+        reverse=True
+    )
     return render_template("person/details.html", title="Détails d'un acteur", person=person)
