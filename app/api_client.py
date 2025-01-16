@@ -109,3 +109,13 @@ class Client:
         response = requests.get(f"{self.BASE_URL}/person/{person_id}")
         response.raise_for_status()
         return response.json()
+
+    def get_movie_genres(self):
+        response = requests.get(f"{self.BASE_URL}/movies/genres")
+        response.raise_for_status()
+        return response.json()
+
+    def discover_movies(self, params: dict):
+        response = requests.get(f"{self.BASE_URL}/movies/discover", params=params)
+        response.raise_for_status()
+        return response.json()
