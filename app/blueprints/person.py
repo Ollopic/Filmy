@@ -17,14 +17,14 @@ def popular():
 
 @person_bp.route("/search")
 def search():
-    query = request.args.get("query")
-    # persons = client.search_persons(query)
-    return render_template("person/search.html", title="Recherche d'artistes", persons={})
+    name = request.args.get("name")
+    results = client.get_artist_by_name(name)
+    return render_template("person/search.html", title="Recherche d'artistes", persons=results["persons"], total_results=results["total_results"])
 
 
 @person_bp.route("/<int:person_id>")
 def details(person_id: int):
-    person = client.get_person(person_id)["data"]
+    person = client.get_person(person_id)
 
     def get_sort_date(credit):
         if credit['media_type'] == 'tv' and credit.get('first_air_date'):

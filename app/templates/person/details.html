@@ -38,10 +38,12 @@
                         <p class="text-gray-600">{{ person.gender }}</p>
                     </div>
 
-                                        <div>
+                    {% if person.birthday %}
+                    <div>
                         <h3 class="font-semibold">Date de naissance</h3>
-                        <p class="text-gray-600">{{ person.birthday|strftime }} (person.age)</p>
+                        <p class="text-gray-600">{{ person.birthday|strftime }} ({{ person.birthday|age }} ans)</p>
                     </div>
+                    {% endif %}
 
                     <!-- Lieu de naissance -->
                     <div>
@@ -80,7 +82,7 @@
                         <div class="w-48 flex-shrink-0 bg-white rounded-lg shadow">
                             <a href="{{ url_for('movie.details', movie_id=movie.id) }}" class="block">
                                 <img class="rounded-t-lg w-full h-auto"
-                                     src="https://image.tmdb.org/t/p/w200/{{ movie.poster_path }}"
+                                     src="{{ "https://image.tmdb.org/t/p/w500" + movie.poster_path if movie.poster_path else url_for('static', filename='images/default-movie.png') }}"
                                      alt="{{ movie.original_title }}"
                                      loading="lazy" />
                                 <div class="p-4">

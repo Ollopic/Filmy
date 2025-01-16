@@ -95,6 +95,11 @@ class Client:
         response.raise_for_status()
         return response.json()
 
+    def get_artist_by_name(self, name: str):
+        response = requests.get(f"{self.BASE_URL}/person?name={name}")
+        response.raise_for_status()
+        return response.json()
+
     def get_popular_persons(self):
         response = requests.get(f"{self.BASE_URL}/person/popular")
         response.raise_for_status()

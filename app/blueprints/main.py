@@ -14,13 +14,6 @@ client = Client(getLogger(__name__))
 def home():
     return render_template("main/index.html", title="Page d'accueil", movies_now_playing=client.get_movies_now_playing())
 
-
-@main_bp.route("/search")
-def search():
-    results = client.get_movie_by_title(request.args.get("title") or "")
-    return render_template("main/search.html", title="Recherche", movies=results["movies"], total_results=results["total_results"])
-
-
 @main_bp.route("/profile", methods=["GET", "POST"])
 def profile():
     if request.method == "POST":

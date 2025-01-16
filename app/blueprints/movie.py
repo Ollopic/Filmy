@@ -1,12 +1,18 @@
 from logging import getLogger
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 
 from app.api_client import Client
 
 movie_bp = Blueprint("movie", __name__, url_prefix="/movies")
 
 client = Client(getLogger(__name__))
+
+
+@movie_bp.route("/search")
+def search():
+    results = client.get_movie_by_title(request.args.get("title") or "")
+    return render_template("movie/search.html", title="Recherche", movies=results["movies"], total_results=results["total_results"])
 
 
 @movie_bp.route("/popular")

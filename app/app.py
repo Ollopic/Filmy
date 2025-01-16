@@ -41,7 +41,8 @@ def minutes_to_hours(minutes):
     return f"{hours}h {remaining_minutes}min"
 
 @app.template_filter('age')
-def calculate_age(birthdate):
+def calculate_age(birthdate: str):
+    birthdate = datetime.strptime(birthdate, "%Y-%m-%d")
     if birthdate:
         today = datetime.now()
         age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
