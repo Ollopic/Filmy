@@ -1,0 +1,202 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<section class="mt-20 md:mx-auto md:w-2/3 sm:w-full">
+    <!-- Header Section -->
+    <div class="flex gap-8">
+        <!-- Left Column - Image and Personal Info -->
+        <div class="flex flex-col w-1/4">
+            <img class="rounded-lg w-full h-auto mb-6"
+                 loading="lazy"
+                 src="{{ 'https://image.tmdb.org/t/p/w500' + person.profile_path if person.profile_path else url_for('static', filename='images/default_credit_picture.jpg') }}"
+                 alt="{{ person.name }}" />
+
+            <!-- Personal Information -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-bold mb-4">Informations personnelles</h2>
+
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="font-semibold">Nom de scène</h3>
+                        <p class="text-gray-600">{{ person.name }}</p>
+                    </div>
+
+                    <div>
+                        <h3 class="font-semibold">Célèbre pour</h3>
+                        <p class="text-gray-600">{{ person.known_for_department }}</p>
+                    </div>
+
+                    <div>
+                        <h3 class="font-semibold">Apparitions connues</h3>
+                        <p class="text-gray-600">{{ person.combined_credits.cast|length }}</p>
+                    </div>
+
+                    <div>
+                        <h3 class="font-semibold">Genre</h3>
+                        <p class="text-gray-600">{{ person.gender }}</p>
+                    </div>
+
+                    {% if person.birthday %}
+                    <div>
+                        <h3 class="font-semibold">Date de naissance</h3>
+                        <p class="text-gray-600">{{ person.birthday|strftime }} ({{ person.birthday|age }} ans)</p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Lieu de naissance -->
+                    <div>
+                        <h3 class="font-semibold">Lieu de naissance</h3>
+                        <p class="text-gray-600">{{ person.place_of_birth }}</p>
+                    </div>
+
+                    <div>
+                        <h3 class="font-semibold">Alias</h3>
+                        <div class="text-gray-600 space-y-1">
+                            {% for alias in person.also_known_as %}
+                            <p>{{ alias }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Main Content -->
+        <div class="flex-1">
+            <h1 class="text-4xl font-bold mb-6">{{ person.name }}</h1>
+
+            <!-- Biography -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold mb-4">Biographie</h2>
+                <p class="text-gray-700">{{ person.biography if person.biography else 'Non renseignée' }}</p>
+            </div>
+
+            <!-- Known For Section -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold mb-4">Célèbre pour</h2>
+                <div class="grid grid-cols-1 gap-6">
+                    <div id="carousel" class="flex space-x-4 overflow-x-auto scroll-smooth pb-4">
+                        {% for movie in person.combined_credits.cast[:8] %}
+                        <div class="w-48 flex-shrink-0 bg-white rounded-lg shadow">
+                            <a href="{{ url_for('movie.details', movie_id=movie.id) }}" class="block">
+                                <img class="rounded-t-lg w-full h-auto"
+                                     src="{{ "https://image.tmdb.org/t/p/w500" + movie.poster_path if movie.poster_path else url_for('static', filename='images/default-movie.png') }}"
+                                     alt="{{ movie.original_title }}"
+                                     loading="lazy" />
+                                <div class="p-4">
+                                    <h3 class="font-bold text-sm mb-1">{{ movie.title if movie.title else movie.name }}</h3>
+                                    <p class="text-gray-500 text-sm">{{ movie.release_date|strftime if movie.release_date else movie.first_air_date|strftime }}</p>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Interprétation</h2>
+                    <div class="flex gap-4">
+                        <select class="rounded-md border-gray-300 shadow-sm px-4 py-2" id="department-filter">
+                            <option value="all">Tous les départements</option>
+                            <option value="acting">Acting</option>
+                            <option value="directing">Directing</option>
+                            <option value="writing">Writing</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow">
+                    {% for credit in person.combined_credits.cast %}
+                    <div class="credit-item p-4 border-b border-gray-200 last:border-b-0" data-department="acting">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12">
+                                    {% if credit.media_type == 'tv' %}
+                                        {% if credit.first_air_date %}
+                                            <span class="text-lg">{{ credit.first_air_date[:4] }}</span>
+                                        {% else %}
+                                            <span class="text-lg">—</span>
+                                        {% endif %}
+                                    {% else %}
+                                        {% if credit.release_date %}
+                                            <span class="text-lg">{{ credit.release_date[:4] }}</span>
+                                        {% else %}
+                                            <span class="text-lg">—</span>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    <a href="{{ url_for('movie.details', movie_id=credit.id) }}"
+                                       class="font-medium hover:text-blue-600">
+                                        {{ credit.title if credit.title else credit.name }}
+                                    </a>
+                                    {% if credit.character %}
+                                        <span class="text-gray-500 ml-2">en tant que {{ credit.character }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if credit.episode_count %}
+                                <span class="text-gray-500">({{ credit.episode_count }} épisode{{ 's' if credit.episode_count > 1 }})</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    {% for credit in person.combined_credits.crew %}
+                    <div class="credit-item p-4 border-b border-gray-200 last:border-b-0" data-department="{{ credit.department|lower }}">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12">
+                                    {% if credit.media_type == 'tv' %}
+                                        {% if credit.first_air_date %}
+                                            <span class="text-lg">{{ credit.first_air_date[:4] }}</span>
+                                        {% else %}
+                                            <span class="text-lg">—</span>
+                                        {% endif %}
+                                    {% else %}
+                                        {% if credit.release_date %}
+                                            <span class="text-lg">{{ credit.release_date[:4] }}</span>
+                                        {% else %}
+                                            <span class="text-lg">—</span>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <a href="{{ url_for('movie.details', movie_id=credit.id) }}"
+                                       class="font-medium hover:text-blue-600">
+                                        {{ credit.title if credit.title else credit.name }}
+                                    </a>
+                                    <span class="text-gray-500 ml-2">... {{ credit.job }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+<!-- JavaScript for filtering -->
+<script>
+document.getElementById('department-filter').addEventListener('change', function(e) {
+    const selectedDepartment = e.target.value;
+    const credits = document.querySelectorAll('.credit-item');
+
+    credits.forEach(credit => {
+        if (selectedDepartment === 'all' || credit.dataset.department === selectedDepartment) {
+            credit.style.display = '';
+        } else {
+            credit.style.display = 'none';
+        }
+    });
+});
+</script>
+
+</section>
+{% endblock %}

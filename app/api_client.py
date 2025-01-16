@@ -4,7 +4,7 @@ import requests
 
 
 class Client:
-    BASE_URL: str = "http://172.17.0.1:8001"
+    BASE_URL: str = "http://172.17.0.1:8002"
 
     _logger: Logger = None
 
@@ -74,6 +74,12 @@ class Client:
 
         return response.json()
 
+    def get_movies_now_playing(self, page: int = 1):
+        response = requests.get(f"{self.BASE_URL}/movies/now_playing?page={page}")
+        response.raise_for_status()
+
+        return response.json()
+
     def get_movie_by_id(self, movie_id: int):
         response = requests.get(f"{self.BASE_URL}/movies/{movie_id}")
         response.raise_for_status()
@@ -81,5 +87,25 @@ class Client:
 
     def get_movie_credits(self, movie_id: int):
         response = requests.get(f"{self.BASE_URL}/movies/{movie_id}/credits")
+        response.raise_for_status()
+        return response.json()
+
+    def get_movie_by_title(self, title: str):
+        response = requests.get(f"{self.BASE_URL}/movies?title={title}")
+        response.raise_for_status()
+        return response.json()
+
+    def get_artist_by_name(self, name: str):
+        response = requests.get(f"{self.BASE_URL}/person?name={name}")
+        response.raise_for_status()
+        return response.json()
+
+    def get_popular_persons(self):
+        response = requests.get(f"{self.BASE_URL}/person/popular")
+        response.raise_for_status()
+        return response.json()
+
+    def get_person(self, person_id: int):
+        response = requests.get(f"{self.BASE_URL}/person/{person_id}")
         response.raise_for_status()
         return response.json()

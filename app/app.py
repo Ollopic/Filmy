@@ -6,7 +6,7 @@ from flask import Flask, flash, redirect, request, url_for
 
 from . import config
 from .api_client import Client
-from .blueprints import artist_bp, auth_bp, main_bp, movie_bp
+from .blueprints import person_bp, auth_bp, main_bp, movie_bp
 
 app = Flask(__name__)
 app.secret_key = config.APP_SECRET_KEY
@@ -40,6 +40,14 @@ def minutes_to_hours(minutes):
     remaining_minutes = minutes % 60
     return f"{hours}h {remaining_minutes}min"
 
+@app.template_filter('age')
+def calculate_age(birthdate: str):
+    birthdate = datetime.strptime(birthdate, "%Y-%m-%d")
+    if birthdate:
+        today = datetime.now()
+        age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+        return age
+    return ''
 
 @app.template_filter("strftime")
 def _jinja2_filter_datetime(date, fmt="%d %b. %Y"):
@@ -64,4 +72,4 @@ def is_user_connected():
 app.register_blueprint(main_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(movie_bp)
-app.register_blueprint(artist_bp)
+app.register_blueprint(person_bp)

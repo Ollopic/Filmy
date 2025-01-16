@@ -12,13 +12,7 @@ client = Client(getLogger(__name__))
 
 @main_bp.route("/")
 def home():
-    return render_template("main/index.html", title="Page d'accueil")
-
-
-@main_bp.route("/search")
-def search():
-    return render_template("main/search.html", title="Recherche")
-
+    return render_template("main/index.html", title="Page d'accueil", movies_now_playing=client.get_movies_now_playing())
 
 @main_bp.route("/profile", methods=["GET", "POST"])
 def profile():

@@ -10,6 +10,9 @@ init: ## init project
 
 start: ## start containers
 	@docker compose up -d --remove-orphans
+	@docker compose exec app npm i
+
+compile-front:
 	@docker compose exec app npm run watch-tailwind
 
 stop: ## stop containers

@@ -7,6 +7,7 @@
   },
   "author": "Marechal Antoine & Lemont Gaetan",
   "devDependencies": {
+    "@tailwindcss/line-clamp": "^0.4.4",
     "tailwindcss": "^3.4.16"
   },
   "dependencies": {

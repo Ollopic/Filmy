@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+<div class="bg-white">
+  <div class="px-4 py-16 sm:px-6 sm:py-24 lg:px-8 mx-4 sm:mx-10 md:mx-20 lg:mx-40">
+    <h2 class="text-2xl font-bold tracking-tight text-gray-900">Artistes populaires</h2>
+
+    <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        {% for person in persons %}
+      <div class="group relative max-w-sm bg-white border border-gray-200 rounded-lg shadow">
+        <a href="{{ url_for('person.details', person_id=person.id_tmdb) }}">
+          <img class="rounded-t-lg" loading="lazy" src="{{ "https://image.tmdb.org/t/p/w500" + person.profile_path if person.profile_path else url_for('static', filename='images/default_credit_picture.jpg') }}" alt="{{ person.name }}" />
+        </a>
+        <div class="p-5">
+          <p class="font-bold text-gray-700 dark:text-gray-400">{{ person.name }}</p>
+          <p class="font-normal text-gray-700 dark:text-gray-400">{{ person.known_for }}</p>
+        </div>
+      </div>
+        {% endfor %}
+    </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
