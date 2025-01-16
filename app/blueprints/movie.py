@@ -29,30 +29,45 @@ def home():
         movie_genres=movie_genres,
     )
 
+
 @movie_bp.route("/search")
 def search():
     results = client.get_movie_by_title(request.args.get("title") or "")
-    return render_template("movie/search.html", title="Recherche", movies=results["movies"], total_results=results["total_results"])
+    return render_template(
+        "movie/search.html",
+        title="Recherche",
+        movies=results["movies"],
+        total_results=results["total_results"],
+    )
 
 
 @movie_bp.route("/popular")
 def popular():
     return render_template(
-        "movie/index.html", title="Films populaires", movies=client.get_popular_movies(), movie_genres=movie_genres
+        "movie/index.html",
+        title="Films populaires",
+        movies=client.get_popular_movies(),
+        movie_genres=movie_genres,
     )
 
 
 @movie_bp.route("/trending")
 def trending():
     return render_template(
-        "movie/index.html", title="Films tendances", movies=client.get_trending_movies(), movie_genres=movie_genres
+        "movie/index.html",
+        title="Films tendances",
+        movies=client.get_trending_movies(),
+        movie_genres=movie_genres,
     )
 
 
 @movie_bp.route("/upcoming")
 def upcoming():
     return render_template(
-        "movie/index.html", title="Films à venir", movies=client.get_upcoming_movies(), movie_genres=movie_genres
+        "movie/index.html",
+        title="Films à venir",
+        movies=client.get_upcoming_movies(),
+        movie_genres=movie_genres,
     )
 
 
@@ -62,7 +77,7 @@ def top_rated():
         "movie/index.html",
         title="Films les mieux notés",
         movies=client.get_top_rating_movies(),
-        movie_genres=movie_genres
+        movie_genres=movie_genres,
     )
 
 

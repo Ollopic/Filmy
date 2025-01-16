@@ -12,7 +12,12 @@ client = Client(getLogger(__name__))
 
 @main_bp.route("/")
 def home():
-    return render_template("main/index.html", title="Page d'accueil", movies_now_playing=client.get_movies_now_playing())
+    return render_template(
+        "main/index.html",
+        title="Page d'accueil",
+        movies_now_playing=client.get_movies_now_playing(),
+    )
+
 
 @main_bp.route("/profile", methods=["GET", "POST"])
 def profile():
@@ -31,13 +36,18 @@ def profile():
 
     return render_template("main/profile.html", title="Profil")
 
+
 @main_bp.route("/about", methods=["GET"])
 def about():
     return render_template("main/about.html", title="A propos")
 
+
 @main_bp.route("/confidentiality", methods=["GET"])
 def confidentiality():
-    return render_template("main/confidentiality.html", title="Politique de confidentialité")
+    return render_template(
+        "main/confidentiality.html", title="Politique de confidentialité"
+    )
+
 
 @main_bp.route("/licence", methods=["GET"])
 def licence():
