@@ -43,40 +43,48 @@ def search():
 
 @movie_bp.route("/popular")
 def popular():
+    page = request.args.get("page", 1, type=int)
+
     return render_template(
         "movie/index.html",
         title="Films populaires",
-        movies=client.get_popular_movies(),
+        movies=client.get_popular_movies(page=page),
         movie_genres=movie_genres,
     )
 
 
 @movie_bp.route("/trending")
 def trending():
+    page = request.args.get("page", 1, type=int)
+
     return render_template(
         "movie/index.html",
         title="Films tendances",
-        movies=client.get_trending_movies(),
+        movies=client.get_trending_movies(page=page),
         movie_genres=movie_genres,
     )
 
 
 @movie_bp.route("/upcoming")
 def upcoming():
+    page = request.args.get("page", 1, type=int)
+
     return render_template(
         "movie/index.html",
         title="Films à venir",
-        movies=client.get_upcoming_movies(),
+        movies=client.get_upcoming_movies(page=page),
         movie_genres=movie_genres,
     )
 
 
 @movie_bp.route("/top_rated")
 def top_rated():
+    page = request.args.get("page", 1, type=int)
+
     return render_template(
         "movie/index.html",
         title="Films les mieux notés",
-        movies=client.get_top_rating_movies(),
+        movies=client.get_top_rating_movies(page=page),
         movie_genres=movie_genres,
     )
 

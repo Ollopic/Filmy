@@ -102,7 +102,7 @@ function resetAndReload() {
 }
 </script>
 
-        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-5 xl:gap-x-8">
+        <div id="movie-grid" class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-5 xl:gap-x-8">
             {% for movie in movies %}
                 <div class="group relative max-w-sm bg-white border border-gray-200 rounded-lg shadow">
                     <a href="{{ url_for('movie.details', movie_id=movie.id_tmdb) }}">
@@ -120,4 +120,62 @@ function resetAndReload() {
   </div>
 </div>
 
+
+<script>
+let currentPage = 2;
+let isLoading = false;
+
+async function loadMoreMovies() {
+    if (isLoading) return;
+
+    isLoading = true;
+    currentPage += 1;
+
+    try {
+        const params = new URLSearchParams(window.location.search);
+
+        params.set('page', currentPage);
+        const response = await fetch(`http://172.17.0.1:8002/movies/discover?${params.toString()}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch movies');
+        }
+
+        const newMovies = await response.json();
+        const movieGrid = document.getElementById('movie-grid');
+
+        newMovies.forEach(movie => {
+            const movieElement = document.createElement('div');
+            movieElement.classList.add('group', 'relative', 'max-w-sm', 'bg-white', 'border', 'border-gray-200', 'rounded-lg', 'shadow');
+            movieElement.innerHTML = `
+                <a href="/movie/details/${movie.id_tmdb}">
+                    <img class="rounded-t-lg" src="${movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '/static/images/default-movie.png'}" alt="${movie.original_title}" loading="lazy" />
+                </a>
+                <div class="p-5 relative">
+                    <div class="z-50 absolute inline-flex items-center justify-center w-10 h-10 text-xs font-bold text-white bg-blue-500 border-2 border-white rounded-full -left-2 -top-4">
+                        ${movie.vote_average.toFixed(2)}
+                    </div>
+                    <p class="font-bold text-gray-700 text-sm mt-2">${movie.title}</p>
+                    <p class="font-normal text-gray-700 text-sm">${movie.release_date || ''}</p>
+                </div>
+            `;
+            movieGrid.appendChild(movieElement);
+        });
+
+    } catch (error) {
+        console.error('Error loading more movies:', error);
+    } finally {
+        isLoading = false;
+    }
+}
+
+// Detect scroll at the end of the page
+window.addEventListener('scroll', () => {
+    const scrollPosition = window.scrollY + window.innerHeight;
+    const bottomPosition = document.documentElement.scrollHeight - 100;
+
+    if (scrollPosition >= bottomPosition) {
+        loadMoreMovies();
+    }
+});
+</script>
 {% endblock %}

@@ -15,7 +15,7 @@
 </form>
 
 <h1 class="text-center text-2xl font-medium text-gray-900 my-5">{{ total_results }} film(s) ont été trouvés</h1>
-<div class="lg:pt-5 sm:pt-5 grid sm:grid-cols-1 md:sm:grid-cols-2 lg:grid-cols-4 gap-2 mr-1 md:mx-10">
+<div id="movie-grid" class="lg:pt-5 sm:pt-5 grid sm:grid-cols-1 md:sm:grid-cols-2 lg:grid-cols-4 gap-2 mr-1 md:mx-10">
     {% for movie in movies %}
     <a href="{{ url_for('movie.details', movie_id=movie.id_tmdb) }}" class="flex items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100">
         <img class="lg:w-32 md:w-16 sm:w-32 w-32 rounded-t-lg md:rounded-none md:rounded-s-lg" src="{{ "https://image.tmdb.org/t/p/w500" + movie.poster_path if movie.poster_path else url_for('static', filename='images/default-movie.png') }}" alt="{{ movie.title }}" loading="lazy">
@@ -26,5 +26,61 @@
     </a>
     {% endfor %}
 </div>
+
+<script>
+let currentPage = 1;
+let isLoading = false;
+
+async function loadMoreMovies() {
+    if (isLoading) return;
+
+    isLoading = true;
+    currentPage += 1;
+
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const response = await fetch(`http://172.17.0.1:8002/movies?page=${currentPage}&${params.toString()}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch movies');
+        }
+
+        const newMovies = await response.json();
+        const movieGrid = document.getElementById('movie-grid');
+
+        newMovies.movies.forEach(movie => {
+            const movieElement = document.createElement('a');
+            movieElement.href = `/movie/details/${movie.id_tmdb}`;
+            movieElement.className =
+                'flex items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100';
+
+            movieElement.innerHTML = `
+                <img class="lg:w-32 md:w-16 sm:w-32 w-32 rounded-t-lg md:rounded-none md:rounded-s-lg"
+                     src="${movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '/static/images/default-movie.png'}"
+                     alt="${movie.title}" loading="lazy">
+                <div class="flex flex-col justify-between p-4 leading-normal">
+                    <h5 class="mb-2 lg:text-2xl md:text-xl sm:text-lg font-bold tracking-tight text-gray-900">${movie.title}</h5>
+                    <p class="line-clamp-2 mb-3 font-normal text-gray-700 sm:text-sm">${movie.overview || ''}</p>
+                </div>
+            `;
+            movieGrid.appendChild(movieElement);
+        });
+
+    } catch (error) {
+        console.error('Error loading more movies:', error);
+    } finally {
+        isLoading = false;
+    }
+}
+
+// Detect scroll at the end of the page
+window.addEventListener('scroll', () => {
+    const scrollPosition = window.scrollY + window.innerHeight;
+    const bottomPosition = document.documentElement.scrollHeight - 100;
+
+    if (scrollPosition >= bottomPosition) {
+        loadMoreMovies();
+    }
+});
+</script>
 
 {% endblock %}
