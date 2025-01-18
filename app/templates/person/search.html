@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             params.set('page', currentPage);
 
-            const response = await fetch(`http://172.17.0.1:8002/person?${params.toString()}`);
+            const response = await fetch(`{{ api_url }}/person?${params.toString()}`);
             if (!response.ok) {
                 throw new Error('Erreur lors du chargement des personnes');
             }

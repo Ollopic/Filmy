@@ -36,7 +36,7 @@ async function loadMorePersons() {
 
     try {
         const params = new URLSearchParams(window.location.search);
-        const response = await fetch(`http://172.17.0.1:8002/person/popular?page=${currentPage}&${params.toString()}`);
+        const response = await fetch(`{{ api_url }}/person/popular?page=${currentPage}&${params.toString()}`);
         if (!response.ok) {
             throw new Error('Failed to fetch persons');
         }

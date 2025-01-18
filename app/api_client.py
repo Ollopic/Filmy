@@ -2,9 +2,11 @@ from logging import Logger, getLogger
 
 import requests
 
+from app import config
+
 
 class Client:
-    BASE_URL: str = "http://172.17.0.1:8002"
+    BASE_URL: str = config.API_URL
 
     _logger: Logger = None
 

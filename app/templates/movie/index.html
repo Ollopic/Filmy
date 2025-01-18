@@ -135,7 +135,7 @@ async function loadMoreMovies() {
         const params = new URLSearchParams(window.location.search);
 
         params.set('page', currentPage);
-        const response = await fetch(`http://172.17.0.1:8002/movies/discover?${params.toString()}`);
+        const response = await fetch(`{{ api_url }}/movies/discover?${params.toString()}`);
         if (!response.ok) {
             throw new Error('Failed to fetch movies');
         }
