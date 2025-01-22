@@ -21,6 +21,11 @@
                         <li>
                             <button type="button" class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" data-search-type="movie">Films</button>
                         </li>
+                        {% if is_connected %}
+                            <li>
+                                <button type="button" class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" data-search-type="collection">Mes collections</button>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
                 <input type="search" id="search-dropdown" name="title" class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Chercher un film, un artiste..." required />

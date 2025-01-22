@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+{% set url = 'data:image/png;base64,' + collection['picture']  if collection['picture'] else 'none' %}
+
+<div class="min-h-screen text-white pt-32 bg-gray-500 bg-center bg-no-repeat bg-cover bg-blend-multiply" style="background-image: url({{ url }});">
+    <div class="container mx-auto p-6">
+        <div class="flex justify-between items-center mb-8">
+            <div class="flex items-center gap-4">
+                <h1 class="text-2xl font-bold">{{ collection.name }}</h1>
+                <span class="text-sm bg-gray-700 px-2 py-1 rounded">{{ collection["items"]|length }} items</span>
+                <span class="text-sm bg-gray-700 px-2 py-1 rounded">FR</span>
+                <a href="{{ url_for('collection.edit', collection_id=collection.id) }}" class="hover:text-gray-300 bg-gray-700 p-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <section>
+            <h2 class="text-xl font-semibold mb-6">Films</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+                {% for collection_item in collection["items"] %}
+                <div class="relative group">
+                    <a href="{{ url_for("movie.details", movie_id=collection_item.film.id, collection_id=collection.id) }}">
+                        <img src="{{ "https://image.tmdb.org/t/p/w500" + collection_item.film.poster_path if collection_item.film.poster_path else url_for('static', filename='images/default-movie.png') }}" alt="{{ collection_item.film.title }}" class="w-full rounded-lg shadow-lg transition-transform duration-300 group-hover:scale-105">
+                    </a>
+                    <div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black to-transparent">
+                        <h3 class="text-sm font-medium flex justify-between items-center">
+                            <div class="flex items-center">
+                                {% if collection_item.favorite %}
+                                    <svg data-tooltip-target="tooltip-bottom" data-tooltip-placement="bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="h-6 w-6">
+                                        <polygon points="50,5 61,38 95,38 66,57 76,90 50,70 24,90 34,57 5,38 39,38" fill="yellow" stroke="black" stroke-width="2"></polygon>
+                                    </svg>
+                                    <div id="tooltip-bottom" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                        Favori
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
+                                {% endif %}
+                                {% if collection_item.borrowed %}
+                                    <svg data-tooltip-target="tooltip-bottom-borrowed" data-tooltip-placement="bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="h-10 w-10">
+                                        <rect x="15" y="30" width="70" height="40" fill="black" stroke="white" stroke-width="2"></rect>
+                                        <circle cx="30" cy="50" r="8" fill="white"></circle>
+                                        <circle cx="70" cy="50" r="8" fill="white"></circle>
+                                    </svg>
+                                    <div id="tooltip-bottom-borrowed" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                        Prêté
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            {{ collection_item.film.title }}
+                        </h3>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

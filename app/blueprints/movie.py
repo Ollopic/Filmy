@@ -47,9 +47,12 @@ def top_rated():
 
 @movie_bp.route("/<int:movie_id>")
 def details(movie_id: int):
+    token = request.cookies.get("token")
+    collections = client.get_all_collections(token) if token else None
     return render_template(
         "movie/details.html",
         title="Détails du film",
-        movie=client.get_movie_by_id(movie_id),
+        movie=client.get_movie_by_id(movie_id, token),
         credits=client.get_movie_credits(movie_id),
+        collections=collections,
     )

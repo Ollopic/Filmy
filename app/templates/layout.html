@@ -84,6 +84,12 @@
                     <a href="{{ url_for('person.popular') }}"
                         class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Artistes</a>
                 </li>
+                {% if is_connected %}
+                    <li>
+                        <a href="{{ url_for('collection.hub') }}"
+                            class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Mes collections</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
