@@ -1,7 +1,7 @@
 import base64
 from logging import getLogger
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for
 
 from app.api_client import Client
 
@@ -33,6 +33,8 @@ def profile():
 
         if profile_data:
             client.update_user(request.cookies["token"], profile_data)
+
+        return redirect(url_for("main.profile"))
 
     return render_template(
         "main/profile.html",
