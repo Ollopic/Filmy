@@ -39,14 +39,165 @@
                 </div>
 
                 <!-- Actions -->
-                <div class="mt-4 flex gap-2">
+                <div class="mt-4 flex gap-2 items-center">
                     <a href="{% if movie.trailer_key %}https://www.youtube.com/watch?v={{ movie.trailer_key }}{% else %}#{% endif %}"
                        target="_blank"
-                       class="px-4 py-2 bg-blue-500 text-sm rounded hover:bg-blue-600 {% if not movie.trailer_key %}pointer-events-none cursor-default bg-gray-400{% endif %}">
+                       class="px-4 py-2.5 bg-blue-500 text-sm rounded hover:bg-blue-600 {% if not movie.trailer_key %}pointer-events-none cursor-default bg-gray-400{% endif %}">
                        Bande-annonce
                     </a>
                     {% if user_data %}
-                        <button class="px-4 py-2 bg-gray-400 text-sm rounded hover:bg-gray-500">Ajouter à ma collection</button>
+                        {% if not movie.collection_item %}
+                            <button data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="block text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+                              Ajouter à ma collection
+                            </button>
+                            <form action="{{ url_for('movie.wishlist', movie_id=movie.id) }}" method="post">
+                                <button type="submit">
+                                    <svg
+                                    class="w-12 h-12"
+                                    viewBox="0 0 200 200"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    stroke="white"
+                                    stroke-width="6"
+                                    data-tooltip-target="tooltip-wishlist"
+                                    data-tooltip-placement="bottom"
+                                    >
+                                        <rect x="50" y="30" width="100" height="140" stroke-linejoin="round"></rect>
+
+                                        <line x1="65" y1="60" x2="120" y2="60" stroke-linecap="round"></line>
+                                        <line x1="65" y1="80" x2="120" y2="80" stroke-linecap="round"></line>
+                                        <line x1="65" y1="100" x2="120" y2="100" stroke-linecap="round"></line>
+                                        <line x1="65" y1="120" x2="100" y2="120" stroke-linecap="round"></line>
+
+                                        <circle cx="130" cy="60" r="3"></circle>
+                                        <circle cx="130" cy="80" r="3"></circle>
+                                        <circle cx="130" cy="100" r="3"></circle>
+                                        <circle cx="130" cy="120" r="3"></circle>
+
+                                        <path d="M75 130
+                                        C 60 110, 40 110, 40 130
+                                        C 40 150, 75 170, 75 170
+                                        C 75 170, 110 150, 110 130
+                                        C 110 110, 90 110, 75 130"
+                                        fill="{{ 'red' if movie.wishlist else 'none' }}"></path>
+                                    </svg>
+                                </button>
+                                <div id="tooltip-wishlist" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                    Ajouter dans la wishlist
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            </form>
+                        {% endif %}
+                        {% if movie.collection_item and not movie.wishlist %}
+                            {% if movie.collection_item.favorite %}
+                                <form action="{{ url_for('collection.update_item', movie_id=movie.id, collection_id=movie.collection_item.id) }}" method="post">
+                                    <input type="hidden" name="favorite" value="false">
+                                    <button type="submit">
+                                        <svg data-tooltip-target="tooltip-bottom" data-tooltip-placement="bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="h-10 w-10 cursor-pointer">
+                                            <polygon points="50,5 61,38 95,38 66,57 76,90 50,70 24,90 34,57 5,38 39,38" fill="yellow" stroke="black" stroke-width="2"></polygon>
+                                        </svg>
+                                    </button>
+                                </form>
+
+                                <div id="tooltip-bottom" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                    Retirer des favoris
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            {% else %}
+                                <form action="{{ url_for('collection.update_item', movie_id=movie.id, collection_id=movie.collection_item.id) }}" method="post">
+                                    <input type="hidden" name="favorite" value="true">
+                                    <button type="submit">
+                                        <svg data-tooltip-target="tooltip-bottom-not-favorite" data-tooltip-placement="bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="h-10 w-10 cursor-pointer">
+                                            <polygon points="50,5 61,38 95,38 66,57 76,90 50,70 24,90 34,57 5,38 39,38" fill="none" stroke="white" stroke-width="4"></polygon>
+                                        </svg>
+                                    </button>
+                                </form>
+                                <div id="tooltip-bottom-not-favorite" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                    Ajouter en favori
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            {% endif %}
+                            {% if movie.collection_item.borrowed %}
+                                <form action="{{ url_for('collection.update_item', movie_id=movie.id, collection_id=movie.collection_item.id) }}" method="post">
+                                    <input type="hidden" name="borrowed" value="false">
+                                    <button type="submit">
+                                        <svg data-tooltip-target="tooltip-bottom-borrowed" data-tooltip-placement="bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="h-12 w-12  cursor-pointer">
+                                            <rect x="15" y="30" width="70" height="40" fill="black" stroke="white" stroke-width="8"></rect>
+                                            <circle cx="30" cy="50" r="8" fill="white"></circle>
+                                            <circle cx="70" cy="50" r="8" fill="white"></circle>
+                                        </svg>
+                                    </button>
+                                </form>
+                                <div id="tooltip-bottom-borrowed" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                    Prêté à {{ movie.collection_item.borrowed_by }} le {{ movie.collection_item.borrowed_at }}
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            {% else %}
+                                <form action="{{ url_for('collection.update_item', movie_id=movie.id, collection_id=movie.collection_item.id) }}" method="post">
+                                    <input type="hidden" name="borrowed" value="true">
+                                    <button type="submit">
+                                        <svg data-tooltip-target="tooltip-bottom-borrowed" data-tooltip-placement="bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="h-12 w-12  cursor-pointer">
+                                            <rect x="15" y="30" width="70" height="40" fill="none" stroke="white" stroke-width="2"></rect>
+                                            <circle cx="30" cy="50" r="8" fill="white"></circle>
+                                            <circle cx="70" cy="50" r="8" fill="white"></circle>
+                                        </svg>
+                                    </button>
+                                </form>
+                                <div id="tooltip-bottom-borrowed" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                    Marquer comme prêté
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+
+                        <!-- Main modal -->
+                        <div id="crud-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                            <div class="relative p-4 w-full max-w-md max-h-full">
+                                <!-- Modal content -->
+                                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                    <!-- Modal header -->
+                                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                            Ajouter le film à une collection
+                                        </h3>
+                                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal">
+                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"></path>
+                                            </svg>
+                                            <span class="sr-only">Close modal</span>
+                                        </button>
+                                    </div>
+                                    <!-- Modal body -->
+                                    <form class="p-4 md:p-5" action="{{ url_for('collection.add_collection_item', wishlist=movie.wishlist) }}" method="post">
+                                        <div class="grid gap-4 mb-4 grid-cols-2">
+                                            <div class="col-span-2">
+                                                <label for="collection" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choisissez la collection</label>
+                                                <select id="collection" name="collection" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                                                    <option value="default">Défaut</option>
+                                                    {% for collection in collections %}
+                                                        {% if collection.name != 'Defaut' %}
+                                                            <option value="{{ collection.id }}">{{ collection.name }}</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-span-2">
+                                                <label for="state" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choisissez l'état</label>
+                                                <select id="state" name="state" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                                                    <option value="Physique">Physique</option>
+                                                    <option value="Numérique">Numérique</option>
+                                                </select>
+                                            </div>
+                                            <input type="hidden" name="film-id" value="{{ movie.id }}"/>
+                                        </div>
+                                        <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                            <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+                                            Ajouter à ma collection
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     {% endif %}
                 </div>
 
@@ -74,10 +225,10 @@
                     {% for credit in credits %}
                     <div class="flex-shrink-0 bg-white rounded-lg shadow p-4">
                         <a href="{{ url_for('person.details', person_id=credit.id_tmdb) }}">
-                        <img src="{{ "https://image.tmdb.org/t/p/w200" + credit.profile_path if credit.profile_path else url_for('static', filename='images/default_credit_picture.jpg') }}"
-                             loading="lazy"
-                             alt="{{ credit.name }}"
-                             class="rounded-lg mb-2 h-64 w-48">
+                            <img src="{{ "https://image.tmdb.org/t/p/w200" + credit.profile_path if credit.profile_path else url_for('static', filename='images/default_credit_picture.jpg') }}"
+                                 loading="lazy"
+                                 alt="{{ credit.name }}"
+                                 class="rounded-lg mb-2 h-64 w-48">
                         </a>
                         <h3 class="text-sm font-bold text-center w-48 break-words">
                             {{ credit.name }}

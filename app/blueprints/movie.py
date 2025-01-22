@@ -1,6 +1,6 @@
 from logging import getLogger
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from app.api_client import Client
 
@@ -91,9 +91,23 @@ def top_rated():
 
 @movie_bp.route("/<int:movie_id>")
 def details(movie_id: int):
+    token = request.cookies.get("token")
+    collections = client.get_all_collections(token) if token else None
     return render_template(
         "movie/details.html",
         title="Détails du film",
-        movie=client.get_movie_by_id(movie_id),
+        movie=client.get_movie_by_id(movie_id, token),
         credits=client.get_movie_credits(movie_id),
+        collections=collections,
     )
+
+
+@movie_bp.route("/<int:movie_id>/wishlist", methods=["POST"])
+def wishlist(movie_id: int):
+    token = request.cookies.get("token")
+
+    res = client.add_to_wishlist(token, movie_id)
+    if res.get("error"):
+        flash(res["error"], "error")
+
+    return redirect(url_for("movie.details", movie_id=movie_id))

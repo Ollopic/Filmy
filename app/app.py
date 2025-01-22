@@ -6,7 +6,7 @@ from flask import Flask, flash, redirect, request, url_for
 
 from . import config
 from .api_client import Client
-from .blueprints import auth_bp, main_bp, movie_bp, person_bp
+from .blueprints import auth_bp, collection_bp, main_bp, movie_bp, person_bp
 
 app = Flask(__name__)
 app.secret_key = config.APP_SECRET_KEY
@@ -15,8 +15,8 @@ client = Client(getLogger(__name__))
 
 
 # Protect routes that require authentication by checking the token validity
-@app.after_request
-def validate_token(response):
+@app.before_request
+def validate_token():
     if "token" in request.cookies:
         token = request.cookies["token"]
         try:
@@ -26,12 +26,10 @@ def validate_token(response):
                 e.response.status_code == 401
                 and e.response.json().get("msg") == "Token has expired"
             ):
+                flash("Token expiré, veuillez vous reconnecter", "error")
                 response = redirect(url_for("auth.login"))
                 response.delete_cookie("token")
-                flash("Token expiré, veuillez vous reconnecter", "error")
                 return response
-
-    return response
 
 
 @app.template_filter()
@@ -72,10 +70,13 @@ def is_user_connected():
     except requests.exceptions.HTTPError:
         return dict(is_connected=False, user_data={}, api_url=config.API_URL)
 
-    return dict(is_connected=token is not None, user_data=user_data, api_url=config.API_URL)
+    return dict(
+        is_connected=token is not None, user_data=user_data, api_url=config.API_URL
+    )
 
 
 app.register_blueprint(main_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(movie_bp)
 app.register_blueprint(person_bp)
+app.register_blueprint(collection_bp)

@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+<form class="mt-4 space-y-4 h-full flex flex-col justify-center items-center mx-40" action="{{ url_for('collection.edit', collection_id=collection.id) }}" method="post" enctype="multipart/form-data">
+    <div class="flex items-center justify-center">
+        <div class="relative flex items-center justify-center w-[165px] h-[165px] transition-all duration-300">
+            <input id="file" name="file" type="file" class="hidden" onchange="loadFile(event)" />
+            <img
+                src="{{ 'data:image/png;base64,' + collection['picture'] if collection['picture'] else url_for('static', filename='images/default-movie.png.jpg') }}"
+                id="output"
+                alt="Nouvelle photo de profil"
+                class="absolute w-[165px] h-[165px] object-cover border-2 border-blue-500 shadow-[0_0_10px_0_rgba(255,255,255,0.35)]">
+            <label
+                for="file"
+                class="absolute flex items-center justify-center w-[165px] h-[165px] cursor-pointer transition-all duration-200 bg-transparent text-transparent hover:bg-black hover:bg-opacity-80 hover:text-white z-10">
+                <span class="inline-flex items-center justify-center h-8 px-2">Changer l'image</span>
+            </label>
+        </div>
+    </div>
+    <label for="name-input" class="block text-sm font-medium text-gray-700">Nom de la collection</label>
+    <input
+        id="name-input"
+        name="name"
+        type="text"
+        value="{{ collection["name"] }}"
+        class="text-gray-800 border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+        required>
+
+    <div class="mt-6 flex space-x-4 justify-center">
+        <button
+            id="save-profile-button"
+            type="submit"
+            class="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-lg hover:bg-green-600 focus:ring-2 focus:ring-green-300">
+            Enregistrer
+        </button>
+    </div>
+</form>
+
+<script>
+const loadFile = function (event) {
+    const image = document.getElementById("output");
+    image.src = URL.createObjectURL(event.target.files[0]);
+    event.preventDefault();
+};
+
+const profileSection = document.getElementById("profile-section");
+const profileSectionEdit = document.getElementById("profile-section-edit");
+
+document.getElementById("edit-profile-button").addEventListener("click", () => {
+    profileSection.classList.add("hidden");
+    profileSectionEdit.classList.replace("hidden", "block");
+});
+</script>
+{% endblock %}
