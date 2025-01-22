@@ -2,9 +2,11 @@ from logging import Logger, getLogger
 
 import requests
 
+from app import config
+
 
 class Client:
-    BASE_URL: str = "http://172.17.0.1:8002"
+    BASE_URL: str = config.API_URL
 
     _logger: Logger = None
 
@@ -107,5 +109,15 @@ class Client:
 
     def get_person(self, person_id: int):
         response = requests.get(f"{self.BASE_URL}/person/{person_id}")
+        response.raise_for_status()
+        return response.json()
+
+    def get_movie_genres(self):
+        response = requests.get(f"{self.BASE_URL}/movies/genres")
+        response.raise_for_status()
+        return response.json()
+
+    def discover_movies(self, params: dict):
+        response = requests.get(f"{self.BASE_URL}/movies/discover", params=params)
         response.raise_for_status()
         return response.json()

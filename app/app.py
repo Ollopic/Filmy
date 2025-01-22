@@ -6,7 +6,7 @@ from flask import Flask, flash, redirect, request, url_for
 
 from . import config
 from .api_client import Client
-from .blueprints import person_bp, auth_bp, main_bp, movie_bp
+from .blueprints import auth_bp, main_bp, movie_bp, person_bp
 
 app = Flask(__name__)
 app.secret_key = config.APP_SECRET_KEY
@@ -40,14 +40,20 @@ def minutes_to_hours(minutes):
     remaining_minutes = minutes % 60
     return f"{hours}h {remaining_minutes}min"
 
-@app.template_filter('age')
+
+@app.template_filter("age")
 def calculate_age(birthdate: str):
     birthdate = datetime.strptime(birthdate, "%Y-%m-%d")
     if birthdate:
         today = datetime.now()
-        age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+        age = (
+            today.year
+            - birthdate.year
+            - ((today.month, today.day) < (birthdate.month, birthdate.day))
+        )
         return age
-    return ''
+    return ""
+
 
 @app.template_filter("strftime")
 def _jinja2_filter_datetime(date, fmt="%d %b. %Y"):
@@ -64,9 +70,9 @@ def is_user_connected():
     try:
         user_data = client.get_me(request.cookies["token"]) if token else {}
     except requests.exceptions.HTTPError:
-        return dict(is_connected=False, user_data={})
+        return dict(is_connected=False, user_data={}, api_url=config.API_URL)
 
-    return dict(is_connected=token is not None, user_data=user_data)
+    return dict(is_connected=token is not None, user_data=user_data, api_url=config.API_URL)
 
 
 app.register_blueprint(main_bp)

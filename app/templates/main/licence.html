@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<header class="py-6 mt-20">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl font-bold">Licence</h1>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <section class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4">Introduction</h2>
+            <p class="mb-4">Cette application est distribuée sous la licence MIT. Cela vous permet d'utiliser, copier, modifier et distribuer librement le logiciel, tant que vous incluez une copie de la licence originale dans vos distributions.</p>
+        </section>
+
+        <section class="bg-white shadow-md rounded-lg p-6 mt-8">
+            <h2 class="text-2xl font-semibold mb-4">Conditions principales</h2>
+            <p class="mb-4">La licence MIT impose les conditions suivantes :
+                <ul class="list-disc list-inside">
+                    <li>Le logiciel est fourni "tel quel", sans aucune garantie.</li>
+                    <li>Le détenteur des droits d'auteur ne peut être tenu responsable de tout dommage résultant de l'utilisation du logiciel.</li>
+                    <li>Une copie de la licence doit être incluse avec toute distribution du logiciel.</li>
+                </ul>
+            </p>
+        </section>
+
+        <section class="bg-white shadow-md rounded-lg p-6 mt-8">
+            <h2 class="text-2xl font-semibold mb-4">Texte complet de la licence</h2>
+            <pre class="bg-gray-100 p-4 rounded overflow-x-auto">
+The MIT License (MIT)
+
+Copyright (c) 2024-2025 Université de Reims
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+            </pre>
+        </section>
+    </main>
+{% endblock %}

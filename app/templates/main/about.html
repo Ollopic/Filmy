@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <header class="py-6 mt-20">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl font-bold">À propos de Filmy</h1>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <section class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4">Notre projet</h2>
+            <p class="mb-4">Cette application de vidéothèque a été développée dans le cadre de la formation en Master Réseaux et Télécom à l'Université de Reims pour la période 2024-2025.</p>
+            <p class="mb-4">L'objectif principal de cette application est de permettre aux utilisateurs de gérer et explorer leur collection de films et séries de manière intuitive et efficace.</p>
+        </section>
+
+        <section class="bg-white shadow-md rounded-lg p-6 mt-8">
+            <h2 class="text-2xl font-semibold mb-4">Les auteurs</h2>
+            <ul class="list-disc list-inside">
+                <li>Gaétan Lemont</li>
+                <li>Antoine Maréchal</li>
+            </ul>
+        </section>
+
+        <section class="bg-white shadow-md rounded-lg p-6 mt-8">
+            <h2 class="text-2xl font-semibold mb-4">Notre mission</h2>
+            <p>Nous visons à offrir une solution simple, moderne et performante pour gérer les vidéothèques personnelles tout en améliorant nos compétences en développement web et en gestion de projet.</p>
+        </section>
+    </main>
+{% endblock %}
