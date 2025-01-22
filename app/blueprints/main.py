@@ -12,7 +12,12 @@ client = Client(getLogger(__name__))
 
 @main_bp.route("/")
 def home():
-    return render_template("main/index.html", title="Page d'accueil", movies_now_playing=client.get_movies_now_playing())
+    return render_template(
+        "main/index.html",
+        title="Page d'accueil",
+        movies_now_playing=client.get_movies_now_playing(),
+    )
+
 
 @main_bp.route("/profile", methods=["GET", "POST"])
 def profile():
@@ -29,4 +34,4 @@ def profile():
         if profile_data:
             client.update_user(request.cookies["token"], profile_data)
 
-    return render_template("main/profile.html", title="Profil")
+    return render_template("main/profile.html", title="Profil", wishlist=client.get_wishlist(request.cookies["token"]))

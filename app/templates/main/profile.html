@@ -3,7 +3,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<div class="bg-gray-100 flex flex-col items-center py-16 mt-10">
+<div class="bg-gray-100 flex flex-col items-center py-16 mt-10 h-full">
     <section id="profile-section" class="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm mb-8">
         <div class="flex flex-col items-center">
             <img
@@ -74,50 +74,18 @@
         </form>
     </section>
 
+    {% if wishlist %}
     <section class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Mes Collections</h2>
-
-        <div class="mb-6">
-            <h3 class="text-lg font-medium text-gray-700 mb-2">Favoris</h3>
-            <ul class="space-y-2">
+        <h3 class="text-lg font-medium text-gray-700 mb-2">Liste de souhaits</h3>
+        <ul class="space-y-2">
+            {% for wish in wishlist %}
                 <li class="bg-gray-100 p-3 rounded-lg flex justify-between items-center">
-                    <span class="text-gray-800">Inception</span>
-                    <button class="text-red-500 hover:underline">Supprimer</button>
+                    <a href="{{ url_for('movie.details', movie_id=wish.id) }}" class="text-gray-800">{{ wish.title }}</a>
                 </li>
-                <li class="bg-gray-100 p-3 rounded-lg flex justify-between items-center">
-                    <span class="text-gray-800">The Matrix</span>
-                    <button class="text-red-500 hover:underline">Supprimer</button>
-                </li>
-            </ul>
-        </div>
-
-        <div class="mb-6">
-            <h3 class="text-lg font-medium text-gray-700 mb-2">Liste de souhaits</h3>
-            <ul class="space-y-2">
-                <li class="bg-gray-100 p-3 rounded-lg flex justify-between items-center">
-                    <span class="text-gray-800">Avatar: La voie de l'eau</span>
-                    <button class="text-red-500 hover:underline">Supprimer</button>
-                </li>
-                <li class="bg-gray-100 p-3 rounded-lg flex justify-between items-center">
-                    <span class="text-gray-800">Dune</span>
-                    <button class="text-red-500 hover:underline">Supprimer</button>
-                </li>
-            </ul>
-        </div>
-
-        <div class="mb-6">
-            <h3 class="text-lg font-medium text-gray-700 mb-2">Prêtés</h3>
-            <ul class="space-y-2">
-                <li class="bg-gray-100 p-3 rounded-lg flex justify-between items-center">
-                    <div>
-                        <span class="text-gray-800">Le Seigneur des Anneaux</span>
-                        <p class="text-sm text-gray-500">Prêté à : Patrick Little Jr.</p>
-                    </div>
-                    <button class="text-red-500 hover:underline">Marquer comme rendu</button>
-                </li>
-            </ul>
-        </div>
+            {% endfor %}
+        </ul>
     </section>
+    {% endif %}
 </div>
 
 <script>

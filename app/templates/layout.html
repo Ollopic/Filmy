@@ -21,7 +21,7 @@
         </a>
         <div class="flex md:order-2 gap-5 items-center">
             {% if is_connected %}
-            <a href="{{ url_for('main.profile') }}" class="flex bg-white rounded-full focus:ring-2 focus:ring-gray-300" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+            <a href="{{ url_for('main.profile') }}" class="flex bg-white rounded-full focus:ring-2 focus:ring-gray-300" id="user-menu-button" aria-expanded="false" data-dropdown-placement="bottom">
                 <img class="w-12 h-12 rounded-full" src="{{ 'data:image/png;base64,' + user_data['profile_image'] if user_data['profile_image'] else url_for('static', filename='images/Default_pfp.jpg') }}" alt="user photo">
             </a>
             <a href="/auth/logout"

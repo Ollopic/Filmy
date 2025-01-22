@@ -1,6 +1,6 @@
 from logging import getLogger
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, url_for, flash, redirect
 
 from app.api_client import Client
 
@@ -12,7 +12,12 @@ client = Client(getLogger(__name__))
 @movie_bp.route("/search")
 def search():
     results = client.get_movie_by_title(request.args.get("title") or "")
-    return render_template("movie/search.html", title="Recherche", movies=results["movies"], total_results=results["total_results"])
+    return render_template(
+        "movie/search.html",
+        title="Recherche",
+        movies=results["movies"],
+        total_results=results["total_results"],
+    )
 
 
 @movie_bp.route("/popular")
@@ -56,3 +61,13 @@ def details(movie_id: int):
         credits=client.get_movie_credits(movie_id),
         collections=collections,
     )
+
+@movie_bp.route("/<int:movie_id>/wishlist", methods=["POST"])
+def wishlist(movie_id: int):
+    token = request.cookies.get("token")
+
+    res = client.add_to_wishlist(token, movie_id)
+    if res.get("error"):
+        flash(res["error"], "error")
+
+    return redirect(url_for("movie.details", movie_id=movie_id))

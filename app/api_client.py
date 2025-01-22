@@ -1,4 +1,3 @@
-import token
 from logging import Logger, getLogger
 
 import requests
@@ -115,21 +114,41 @@ class Client:
         return response.json()
 
     def get_all_collections(self, token: str):
-        response = requests.get(f"{self.BASE_URL}/collection",
-                                headers={"Authorization": f"Bearer {token}"})
+        response = requests.get(
+            f"{self.BASE_URL}/collection", headers={"Authorization": f"Bearer {token}"}
+        )
         response.raise_for_status()
         return response.json()
 
     def get_collection(self, token: str, collection_id: str | int):
-        response = requests.get(f"{self.BASE_URL}/collection/{collection_id}",
-                                headers={"Authorization": f"Bearer {token}"})
+        response = requests.get(
+            f"{self.BASE_URL}/collection/{collection_id}",
+            headers={"Authorization": f"Bearer {token}"},
+        )
         response.raise_for_status()
         return response.json()
 
-    def add_item_into_collection(self, token: str, collection_id: str, film_id: str, state: str):
+    def add_item_into_collection(
+        self, token: str, collection_id: str, film_id: str, state: str
+    ):
         response = requests.post(
-            f"{self.BASE_URL}/collection/{collection_id if collection_id != "default" else 0}",
+            f"{self.BASE_URL}/collection/{collection_id if collection_id != 'default' else 0}",
             json={"film_id": film_id, "state": state},
+            headers={"Authorization": f"Bearer {token}"},
+        )
+        return response.json()
+
+    def transfer_wishlist_to_collection(self, token: str, collection_id: int, film_id: int, state: str):
+        response = requests.patch(
+            f"{self.BASE_URL}/collection/wishlist",
+            json={"film_id": film_id, "state": state, "collection_id": collection_id if collection_id != 'default' else 0},
+            headers={"Authorization": f"Bearer {token}"},
+        )
+        return response.json()
+
+    def delete_collection_item(self, token: str, collection_id: int, film_id: int):
+        response = requests.delete(
+            f"{self.BASE_URL}/collection/{collection_id}/{film_id}",
             headers={"Authorization": f"Bearer {token}"},
         )
         return response.json()
@@ -158,10 +177,30 @@ class Client:
         )
         return response.json()
 
-    def update_collection_item(self, token: str, collection_id: int, film_id: int, collection_item_data: dict):
+    def update_collection_item(
+        self, token: str, collection_id: int, film_id: int, collection_item_data: dict
+    ):
         response = requests.patch(
             f"{self.BASE_URL}/collection/{collection_id}/{film_id}",
             json=collection_item_data,
             headers={"Authorization": f"Bearer {token}"},
         )
+        return response.json()
+
+    def add_to_wishlist(self, token: str, film_id: int):
+        response = requests.post(
+            f"{self.BASE_URL}/collection/wishlist",
+            json={"film_id": film_id},
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+        return response.json()
+
+    def get_wishlist(self, token: str):
+        response = requests.get(
+            f"{self.BASE_URL}/collection/wishlist",
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+        response.raise_for_status()
         return response.json()

@@ -41,13 +41,49 @@
                        Bande-annonce
                     </a>
                     {% if user_data %}
-                        <!-- Modal toggle -->
                         {% if not movie.collection_item %}
                             <button data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="block text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
                               Ajouter à ma collection
                             </button>
+                            <form action="{{ url_for('movie.wishlist', movie_id=movie.id) }}" method="post">
+                                <button type="submit">
+                                    <svg
+                                    class="w-12 h-12"
+                                    viewBox="0 0 200 200"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    stroke="white"
+                                    stroke-width="6"
+                                    data-tooltip-target="tooltip-wishlist"
+                                    data-tooltip-placement="bottom"
+                                    >
+                                        <rect x="50" y="30" width="100" height="140" stroke-linejoin="round"></rect>
+
+                                        <line x1="65" y1="60" x2="120" y2="60" stroke-linecap="round"></line>
+                                        <line x1="65" y1="80" x2="120" y2="80" stroke-linecap="round"></line>
+                                        <line x1="65" y1="100" x2="120" y2="100" stroke-linecap="round"></line>
+                                        <line x1="65" y1="120" x2="100" y2="120" stroke-linecap="round"></line>
+
+                                        <circle cx="130" cy="60" r="3"></circle>
+                                        <circle cx="130" cy="80" r="3"></circle>
+                                        <circle cx="130" cy="100" r="3"></circle>
+                                        <circle cx="130" cy="120" r="3"></circle>
+
+                                        <path d="M75 130
+                                        C 60 110, 40 110, 40 130
+                                        C 40 150, 75 170, 75 170
+                                        C 75 170, 110 150, 110 130
+                                        C 110 110, 90 110, 75 130"
+                                        fill="{{ 'red' if movie.wishlist else 'none' }}"></path>
+                                    </svg>
+                                </button>
+                                <div id="tooltip-wishlist" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                    Ajouter dans la wishlist
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            </form>
                         {% endif %}
-                        {% if movie.collection_item %}
+                        {% if movie.collection_item and not movie.wishlist %}
                             {% if movie.collection_item.favorite %}
                                 <form action="{{ url_for('collection.update_item', movie_id=movie.id, collection_id=movie.collection_item.id) }}" method="post">
                                     <input type="hidden" name="favorite" value="false">
@@ -127,7 +163,7 @@
                                         </button>
                                     </div>
                                     <!-- Modal body -->
-                                    <form class="p-4 md:p-5" action="{{ url_for('collection.add_collection_item') }}" method="post">
+                                    <form class="p-4 md:p-5" action="{{ url_for('collection.add_collection_item', wishlist=movie.wishlist) }}" method="post">
                                         <div class="grid gap-4 mb-4 grid-cols-2">
                                             <div class="col-span-2">
                                                 <label for="collection" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choisissez la collection</label>
@@ -183,10 +219,12 @@
                 <div id="carousel" class="flex space-x-4 overflow-x-auto scroll-smooth">
                     {% for credit in credits %}
                     <div class="flex-shrink-0 bg-white rounded-lg shadow p-4">
-                        <img src="{{ "https://image.tmdb.org/t/p/w200" + credit.profile_path if credit.profile_path else url_for('static', filename='images/default_credit_picture.jpg') }}"
-                             loading="lazy"
-                             alt="{{ credit.name }}"
-                             class="rounded-lg mb-2 h-64 w-48">
+                        <a href="{{ url_for('person.details', person_id=credit.id_tmdb) }}">
+                            <img src="{{ "https://image.tmdb.org/t/p/w200" + credit.profile_path if credit.profile_path else url_for('static', filename='images/default_credit_picture.jpg') }}"
+                                 loading="lazy"
+                                 alt="{{ credit.name }}"
+                                 class="rounded-lg mb-2 h-64 w-48">
+                        </a>
                         <h3 class="text-sm font-bold text-center w-48 break-words">
                             {{ credit.name }}
                         </h3>
