@@ -34,8 +34,11 @@ def profile():
         if profile_data:
             client.update_user(request.cookies["token"], profile_data)
 
-    return render_template("main/profile.html", title="Profil", wishlist=client.get_wishlist(request.cookies["token"]))
-
+    return render_template(
+        "main/profile.html",
+        title="Profil",
+        wishlist=client.get_wishlist(request.cookies["token"]),
+    )
 
 
 @main_bp.route("/about", methods=["GET"])

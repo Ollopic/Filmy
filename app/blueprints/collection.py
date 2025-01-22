@@ -27,6 +27,7 @@ def view(collection_id):
         "collection/view.html", title="Vue d'une collection", collection=collection
     )
 
+
 @collection_bp.route("/add_collection_item", methods=["POST"])
 def add_collection_item():
     collection = request.form.get("collection")
@@ -37,7 +38,9 @@ def add_collection_item():
 
     if request.cookies["token"]:
         if is_wishlist:
-            res = client.transfer_wishlist_to_collection(request.cookies["token"], collection, film_id, state)
+            res = client.transfer_wishlist_to_collection(
+                request.cookies["token"], collection, film_id, state
+            )
         else:
             res = client.add_item_into_collection(
                 request.cookies["token"], collection, film_id, state
@@ -137,9 +140,12 @@ def update_item(collection_id: int, movie_id: int):
 
     return redirect(url_for("main.home"))
 
+
 @collection_bp.route("/<int:collection_id>/<int:movie_id>/delete", methods=["POST"])
 def delete_collection_item(collection_id, movie_id):
-    collection = client.delete_collection_item(request.cookies["token"], collection_id, movie_id)
+    collection = client.delete_collection_item(
+        request.cookies["token"], collection_id, movie_id
+    )
     if collection.get("error"):
         flask.flash(collection["error"], "error")
         return redirect(url_for("collection.hub"))

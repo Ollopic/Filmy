@@ -1,6 +1,6 @@
 from logging import getLogger
 
-from flask import Blueprint, render_template, request, url_for, flash, redirect
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from app.api_client import Client
 
@@ -100,6 +100,7 @@ def details(movie_id: int):
         credits=client.get_movie_credits(movie_id),
         collections=collections,
     )
+
 
 @movie_bp.route("/<int:movie_id>/wishlist", methods=["POST"])
 def wishlist(movie_id: int):

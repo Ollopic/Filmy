@@ -140,10 +140,16 @@ class Client:
         )
         return response.json()
 
-    def transfer_wishlist_to_collection(self, token: str, collection_id: int, film_id: int, state: str):
+    def transfer_wishlist_to_collection(
+        self, token: str, collection_id: int, film_id: int, state: str
+    ):
         response = requests.patch(
             f"{self.BASE_URL}/collection/wishlist",
-            json={"film_id": film_id, "state": state, "collection_id": collection_id if collection_id != 'default' else 0},
+            json={
+                "film_id": film_id,
+                "state": state,
+                "collection_id": collection_id if collection_id != "default" else 0,
+            },
             headers={"Authorization": f"Bearer {token}"},
         )
         return response.json()
@@ -207,7 +213,7 @@ class Client:
         response.raise_for_status()
         return response.json()
 
-      def get_movie_genres(self):
+    def get_movie_genres(self):
         response = requests.get(f"{self.BASE_URL}/movies/genres")
         response.raise_for_status()
         return response.json()

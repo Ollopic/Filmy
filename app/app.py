@@ -70,7 +70,9 @@ def is_user_connected():
     except requests.exceptions.HTTPError:
         return dict(is_connected=False, user_data={}, api_url=config.API_URL)
 
-    return dict(is_connected=token is not None, user_data=user_data, api_url=config.API_URL)
+    return dict(
+        is_connected=token is not None, user_data=user_data, api_url=config.API_URL
+    )
 
 
 app.register_blueprint(main_bp)
