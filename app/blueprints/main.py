@@ -35,3 +35,21 @@ def profile():
             client.update_user(request.cookies["token"], profile_data)
 
     return render_template("main/profile.html", title="Profil", wishlist=client.get_wishlist(request.cookies["token"]))
+
+
+
+@main_bp.route("/about", methods=["GET"])
+def about():
+    return render_template("main/about.html", title="A propos")
+
+
+@main_bp.route("/confidentiality", methods=["GET"])
+def confidentiality():
+    return render_template(
+        "main/confidentiality.html", title="Politique de confidentialité"
+    )
+
+
+@main_bp.route("/licence", methods=["GET"])
+def licence():
+    return render_template("main/licence.html", title="Licence")

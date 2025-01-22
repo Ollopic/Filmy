@@ -8,74 +8,101 @@
   <div class="px-4 py-16 sm:px-6 sm:py-24 lg:px-8 mx-4 sm:mx-10 md:mx-20 lg:mx-40">
     <h2 class="text-2xl font-bold tracking-tight text-gray-900">{{ title }}</h2>
     <div class="flex gap-5">
-     <div class="mt-7 box rounded-xl border border-gray-300 bg-white p-6 w-full md:max-w-sm">
-      <div class="flex items-center justify-between w-full pb-3 border-b border-gray-200 mb-7">
-        <p class="font-medium text-base leading-7 text-black">Filter Plans</p>
-        <p class="font-medium text-xs text-gray-500 cursor-pointer transition-all duration-500 hover:text-indigo-600">RESET</p>
-      </div>
+     <form id="movieFilters" class="mt-7 box rounded-xl border border-gray-300 bg-white p-6 w-full md:max-w-sm" action="{{ url_for('movie.home') }}">
+  <div class="flex items-center justify-between w-full pb-3 border-b border-gray-200 mb-7">
+    <p class="font-medium text-base leading-7 text-black">Filter Movies</p>
+    <button type="button" onclick="resetAndReload()" class="font-medium text-xs text-gray-500 cursor-pointer transition-all duration-500 hover:text-indigo-600">RESET</button>
+  </div>
 
-      <div class="w-full mb-7">
-        <div class="accordion-group grid grid-cols-1 gap-5 sm:gap-9" data-accordion="default-accordion">
-          <div class="accordion" id="category-heading-one">
-            <button
-              class="accordion-toggle group accordion-active:text-indigo-600 inline-flex items-center justify-between leading-8 text-gray-600 w-full transition duration-500 hover:text-indigo-600 active:text-indigo-600"
-              aria-controls="category-collapse-one">
-              <h5 class="font-medium text-sm text-gray-900">Availability</h5>
-              <svg class="text-gray-900 transition duration-500 group-hover:text-indigo-600 accordion-active:text-indigo-600 accordion-active:rotate-180" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M16.5 8.25L12.4142 12.3358C11.7475 13.0025 11.4142 13.3358 11 13.3358C10.5858 13.3358 10.2525 13.0025 9.58579 12.3358L5.5 8.25"
-                  stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>
-            </button>
-            <div id="category-collapse-one" class="accordion-content w-full px-0 overflow-hidden pr-4 max-h-0" aria-labelledby="category-heading-one">
-              <div class="box flex flex-col gap-2 mt-5">
-                <div class="flex items-center mb-2">
-                  <input id="checkbox-option-1" type="checkbox" value="" class="checkbox-white w-5 h-5 appearance-none border border-gray-500 rounded mr-1 hover:border-indigo-100 hover:bg-indigo-600 checked:bg-no-repeat checked:bg-center checked:border-indigo-100 checked:bg-indigo-600 checked:bg-[url('https://pagedone.io/asset/uploads/1689406942.svg')]">
-                  <label for="checkbox-option-1" class="ml-1 font-normal text-xs cursor-pointer text-gray-600">option-1</label>
-                </div>
-                <div class="flex items-center mb-2">
-                  <input id="checkbox-option-2" type="checkbox" value="" class="checkbox-white w-5 h-5 appearance-none border border-gray-500 rounded mr-1 hover:border-indigo-100 hover:bg-indigo-600 checked:bg-no-repeat checked:bg-center checked:border-indigo-600 checked:bg-indigo-100 checked:bg-[url('https://pagedone.io/asset/uploads/1689406942.svg')]">
-                  <label for="checkbox-option-2" class="ml-1 font-normal text-xs cursor-pointer text-gray-600">option-2</label>
-                </div>
-                <div class="flex items-center mb-2">
-                  <input id="checkbox-option-3" type="checkbox" value="" class="checkbox-white w-5 h-5 appearance-none border border-gray-500 rounded mr-1 hover:border-indigo-600 hover:bg-indigo-600 checked:bg-no-repeat checked:bg-center checked:border-indigo-600 checked:bg-indigo-100 checked:bg-[url('https://pagedone.io/asset/uploads/1689406942.svg')]">
-                  <label for="checkbox-option-3" class="ml-1 font-normal text-xs cursor-pointer text-gray-600">option-3</label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  <!-- Sort By -->
+  <div class="mb-7">
+    <label for="sort" class="font-medium text-sm leading-6 text-gray-600 mb-1 block">Trier par</label>
+    <select name="sort_by" id="sort" class="h-12 border border-gray-300 text-gray-900 text-xs font-medium rounded-full block w-full py-2.5 px-4 appearance-none">
+      <option value="popularity.desc">Popularité Descendante</option>
+      <option value="popularity.asc">Popularité Ascendante</option>
+      <option value="vote_average.desc">Note Descendante</option>
+      <option value="vote_average.asc">Note Ascendante</option>
+      <option value="primary_release_date.desc">Date de sortie Descendante</option>
+      <option value="primary_release_date.asc">Date de sortie Ascendante</option>
+    </select>
+  </div>
 
-      <label for="Offer" class="font-medium text-sm leading-6 text-gray-600 mb-1">Offer</label>
-      <div class="relative w-full mb-7">
-        <select id="Offer" class="h-12 border border-gray-300 text-gray-900 text-xs font-medium rounded-full block w-full py-2.5 px-4 appearance-none relative focus:outline-none bg-white">
-          <option selected>5% off upi discount</option>
-          <option value="option 1">option 1</option>
-          <option value="option 2">option 2</option>
-          <option value="option 3">option 3</option>
-          <option value="option 4">option 4</option>
-        </select>
+  <!-- Genres -->
+  <div class="mb-7">
+    <p class="font-medium text-sm leading-6 text-black mb-3">Genres</p>
+      <div class="grid grid-cols-2 gap-2">
+      {% for genre in movie_genres %}
+      <div class="flex items-center">
+        <input name="with_genres" value={{ genre.id }} id="genre-action" type="checkbox" class="w-5 h-5 appearance-none border border-gray-300 rounded-md mr-2">
+        <label for="genre-action" class="text-xs font-normal text-gray-600 leading-4">{{ genre.name }}</label>
       </div>
+        {% endfor %}
+  </div>
+</div>
 
-      <p class="font-medium text-sm leading-6 text-black mb-3">Discount</p>
-      <div class="box flex flex-col gap-2">
-        <div class="flex items-center">
-          <input id="checkbox-default-1" type="checkbox" value="" class="w-5 h-5 appearance-none border border-gray-300 rounded-md mr-2 hover:border-indigo-500 hover:bg-indigo-100 checked:bg-no-repeat checked:bg-center checked:border-indigo-500 checked:bg-indigo-100 checked:bg-[url('https://pagedone.io/asset/uploads/1689406942.svg')]">
-          <label for="checkbox-default-1" class="text-xs font-normal text-gray-600 leading-4 cursor-pointer">20% or more</label>
-        </div>
-        <div class="flex items-center">
-          <input id="checkbox-default-2" type="checkbox" value="" class="w-5 h-5 appearance-none border border-gray-300 rounded-md mr-2 hover:border-indigo-500 hover:bg-indigo-100 checked:bg-no-repeat checked:bg-center checked:border-indigo-500 checked:bg-indigo-100 checked:bg-[url('https://pagedone.io/asset/uploads/1689406942.svg')]">
-          <label for="checkbox-default-2" class="text-xs font-normal text-gray-600 leading-4 cursor-pointer">30% or more</label>
-        </div>
-        <div class="flex items-center">
-          <input id="checkbox-default-3" type="checkbox" value="" class="w-5 h-5 appearance-none border border-gray-300 rounded-md mr-2 hover:border-indigo-500 hover:bg-indigo-100 checked:bg-no-repeat checked:bg-center checked:border-indigo-500 checked:bg-indigo-100 checked:bg-[url('https://pagedone.io/asset/uploads/1689406942.svg')]">
-          <label for="checkbox-default-3" class="text-xs font-normal text-gray-600 leading-4 cursor-pointer">50% or more</label>
-        </div>
+  <!-- Release Date Range -->
+  <div class="mb-7">
+    <p class="font-medium text-sm leading-6 text-black mb-3">Date de sortie</p>
+    <div class="grid gap-4">
+      <div>
+        <label for="release-from" class="block text-xs text-gray-600 mb-1">De</label>
+        <input type="date" name="release_date.gte" id="release-from" class="h-12 border border-gray-300 text-gray-900 text-xs font-medium rounded-full block w-full py-2.5 px-4">
+      </div>
+      <div>
+        <label for="release-to" class="block text-xs text-gray-600 mb-1">A</label>
+        <input type="date" name="release_date.lte" id="release-to" class="h-12 border border-gray-300 text-gray-900 text-xs font-medium rounded-full block w-full py-2.5 px-4">
       </div>
     </div>
+  </div>
 
-        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-5 xl:gap-x-8">
+  <!-- Runtime Range -->
+  <div class="mb-7">
+    <p class="font-medium text-sm leading-6 text-black mb-3">Durée (minutes)</p>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label for="runtime-min" class="block text-xs text-gray-600 mb-1">Min</label>
+        <input type="number" name="with_runtime.gte" id="runtime-min" min="0" class="h-12 border border-gray-300 text-gray-900 text-xs font-medium rounded-full block w-full py-2.5 px-4">
+      </div>
+      <div>
+        <label for="runtime-max" class="block text-xs text-gray-600 mb-1">Max</label>
+        <input type="number" name="with_runtime.lte" id="runtime-max" min="0" class="h-12 border border-gray-300 text-gray-900 text-xs font-medium rounded-full block w-full py-2.5 px-4">
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="w-full bg-indigo-600 text-white rounded-full py-3 px-4 text-sm font-medium hover:bg-indigo-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+    Appliquer les filtres
+  </button>
+</form>
+
+<script>
+function resetAndReload() {
+    const form = document.getElementById('movieFilters');
+
+    // Reset select elements to first option
+    const selects = form.querySelectorAll('select');
+    selects.forEach(select => {
+        select.selectedIndex = 0;
+    });
+
+    // Reset checkboxes
+    const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    // Reset date and number inputs
+    const inputs = form.querySelectorAll('input[type="date"], input[type="number"]');
+    inputs.forEach(input => {
+        input.value = '';
+    });
+
+    // Reload the page without query parameters
+    window.location.href = window.location.pathname;
+}
+</script>
+
+        <div id="movie-grid" class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-5 xl:gap-x-8">
             {% for movie in movies %}
                 <div class="group relative max-w-sm bg-white border border-gray-200 rounded-lg shadow">
                     <a href="{{ url_for('movie.details', movie_id=movie.id_tmdb) }}">
@@ -84,7 +111,7 @@
                     <div class="p-5 relative">
                         <div class="z-50 absolute inline-flex items-center justify-center w-10 h-10 text-xs font-bold text-white bg-blue-500 border-2 border-white rounded-full -left-2 -top-4">{{ movie.vote_average|round(2) }}</div>
                         <p class="font-bold text-gray-700 text-sm mt-2">{{ movie.title }}</p>
-                        <p class="font-normal text-gray-700 text-sm">{{ movie.release_date|strftime }}</p>
+                        <p class="font-normal text-gray-700 text-sm">{{ movie.release_date|strftime if movie.release_date }}</p>
                     </div>
                 </div>
             {% endfor %}
@@ -93,4 +120,62 @@
   </div>
 </div>
 
+
+<script>
+let currentPage = 2;
+let isLoading = false;
+
+async function loadMoreMovies() {
+    if (isLoading) return;
+
+    isLoading = true;
+    currentPage += 1;
+
+    try {
+        const params = new URLSearchParams(window.location.search);
+
+        params.set('page', currentPage);
+        const response = await fetch(`{{ api_url }}/movies/discover?${params.toString()}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch movies');
+        }
+
+        const newMovies = await response.json();
+        const movieGrid = document.getElementById('movie-grid');
+
+        newMovies.forEach(movie => {
+            const movieElement = document.createElement('div');
+            movieElement.classList.add('group', 'relative', 'max-w-sm', 'bg-white', 'border', 'border-gray-200', 'rounded-lg', 'shadow');
+            movieElement.innerHTML = `
+                <a href="/movie/details/${movie.id_tmdb}">
+                    <img class="rounded-t-lg" src="${movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '/static/images/default-movie.png'}" alt="${movie.original_title}" loading="lazy" />
+                </a>
+                <div class="p-5 relative">
+                    <div class="z-50 absolute inline-flex items-center justify-center w-10 h-10 text-xs font-bold text-white bg-blue-500 border-2 border-white rounded-full -left-2 -top-4">
+                        ${movie.vote_average.toFixed(2)}
+                    </div>
+                    <p class="font-bold text-gray-700 text-sm mt-2">${movie.title}</p>
+                    <p class="font-normal text-gray-700 text-sm">${movie.release_date || ''}</p>
+                </div>
+            `;
+            movieGrid.appendChild(movieElement);
+        });
+
+    } catch (error) {
+        console.error('Error loading more movies:', error);
+    } finally {
+        isLoading = false;
+    }
+}
+
+// Detect scroll at the end of the page
+window.addEventListener('scroll', () => {
+    const scrollPosition = window.scrollY + window.innerHeight;
+    const bottomPosition = document.documentElement.scrollHeight - 100;
+
+    if (scrollPosition >= bottomPosition) {
+        loadMoreMovies();
+    }
+});
+</script>
 {% endblock %}
