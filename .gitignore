@@ -16,5 +16,3 @@ build/
 back/settings_back.py
 
 app/node_modules/
-
-config.py
