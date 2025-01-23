@@ -14,21 +14,26 @@ app.secret_key = config.APP_SECRET_KEY
 
 client = Client(getLogger(__name__))
 
+
 @app.errorhandler(400)
 def bad_request(error):
-    return redirect(url_for('main.home'))  # Redirige vers la page d'accueil
+    return redirect(url_for("main.home"))  # Redirige vers la page d'accueil
+
 
 @app.errorhandler(403)
 def internal_server_error(error):
-    return redirect(url_for('main.home'))
+    return redirect(url_for("main.home"))
+
 
 @app.errorhandler(404)
 def internal_server_error(error):
-    return redirect(url_for('main.home'))
+    return redirect(url_for("main.home"))
+
 
 @app.errorhandler(500)
 def internal_server_error(error):
-    return redirect(url_for('main.home'))
+    return redirect(url_for("main.home"))
+
 
 # Protect routes that require authentication by checking the token validity
 @app.before_request

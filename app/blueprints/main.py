@@ -1,7 +1,7 @@
 import base64
 from logging import getLogger
 
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, redirect, render_template, request, url_for
 
 from app.api_client import Client
 
