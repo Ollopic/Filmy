@@ -1,7 +1,6 @@
 from datetime import datetime
 from logging import getLogger
 
-import flask
 import requests
 from flask import Flask, flash, redirect, request, url_for
 
@@ -21,12 +20,12 @@ def bad_request(error):
 
 
 @app.errorhandler(403)
-def internal_server_error(error):
+def forbidden_error(error):
     return redirect(url_for("main.home"))
 
 
 @app.errorhandler(404)
-def internal_server_error(error):
+def not_found_error(error):
     return redirect(url_for("main.home"))
 
 
