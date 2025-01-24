@@ -6,6 +6,9 @@ services:
     volumes:
       - ./app:/app
       - ./entrypoint.sh:/entrypoint.sh
+    environment:
+      APP_SECRET_KEY: ''
+      API_URL: ''
     entrypoint: ["/entrypoint.sh"]
     networks:
       - filmy_network
