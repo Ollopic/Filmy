@@ -87,7 +87,9 @@
                                      loading="lazy" />
                                 <div class="p-4">
                                     <h3 class="font-bold text-sm mb-1">{{ movie.title if movie.title else movie.name }}</h3>
+                                    {% if movie.release_data or movie.first_air_date %}
                                     <p class="text-gray-500 text-sm">{{ movie.release_date|strftime if movie.release_date else movie.first_air_date|strftime }}</p>
+                                    {% endif %}
                                 </div>
                             </a>
                         </div>
