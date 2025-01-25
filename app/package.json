@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Videotheque de films",
   "scripts": {
-    "watch-tailwind": "npx tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css --watch"
+    "watch-tailwind": "npx tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css --watch",
+    "build": "NODE_ENV=production npx tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css"
   },
   "author": "Marechal Antoine & Lemont Gaetan",
   "devDependencies": {
