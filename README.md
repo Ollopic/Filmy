@@ -1,7 +1,7 @@
 <p align="center">
-  <img src="https://img.shields.io/github/languages/top/Ollopic/Filmy "Language"" alt=" Language" />
-  <img src="https://img.shields.io/github/stars/Ollopic/Filmy "Stars"" alt=" Stars" />
-  <img src="https://img.shields.io/github/contributors/Ollopic/Filmy "Contributors"" alt=" Contributors" />
+  <img src="https://img.shields.io/github/languages/top/Ollopic/Filmy" alt="Language" />
+  <img src="https://img.shields.io/github/stars/Ollopic/Filmy" alt="Stars" />
+  <img src="https://img.shields.io/github/contributors/Ollopic/Filmy" alt="Contributors" />
 </p>
 
 # Filmy
