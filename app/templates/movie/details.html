@@ -232,33 +232,43 @@
                         <a href="{{ url_for('person.details', person_id=credit.id_tmdb) }}">
                             <img src="{{ "https://image.tmdb.org/t/p/w200" + credit.profile_path if credit.profile_path else url_for('static', filename='images/default_credit_picture.jpg') }}"
                                  loading="lazy"
-                                 alt="{{ credit.name }}"
+                                 alt="{{ credit.name if credit.name else 'Image' }}"
                                  class="rounded-lg mb-2 h-64 w-48">
                         </a>
+                        {% if credit.name %}
                         <h3 class="text-sm font-bold text-center w-48 break-words">
                             {{ credit.name }}
                         </h3>
+                        {% endif %}
+                        {% if credit.character %}
                         <p class="text-gray-500 text-sm text-center w-48 break-words">
                             {{ credit.character }}
                         </p>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
             </div>
 
             <div class="flex lg:flex-col gap-5 md:mr-20 sm:mr-0 items-center justify-center sm:max-lg:w-full md:mb-10 md:mb-0">
+                {% if movie.original_title %}
                 <div class="flex flex-col items-center gap-3">
                     <p class="font-bold text-lg">Titre d'origine</p>
                     <p>{{ movie.original_title }}</p>
                 </div>
+                {% endif %}
+                {% if movie.status %}
                 <div class="flex flex-col items-center gap-3">
                     <p class="font-bold text-lg">Statut</p>
                     <p>{{ movie.status }}</p>
                 </div>
+                {% endif %}
+                {% if movie.revenue %}
                 <div class="flex flex-col items-center gap-3">
                     <p class="font-bold text-lg">Revenue</p>
                     <p>${{ movie.revenue }}</p>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
