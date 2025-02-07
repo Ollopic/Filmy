@@ -147,7 +147,7 @@ async function loadMoreMovies() {
             const movieElement = document.createElement('div');
             movieElement.classList.add('group', 'relative', 'max-w-sm', 'bg-white', 'border', 'border-gray-200', 'rounded-lg', 'shadow');
             movieElement.innerHTML = `
-                <a href="/movie/${movie.id_tmdb}">
+                <a href="/movies/${movie.id_tmdb}">
                     <img class="rounded-t-lg" src="${movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '/static/images/default-movie.png'}" alt="${movie.original_title}" loading="lazy" />
                 </a>
                 <div class="p-5 relative">
